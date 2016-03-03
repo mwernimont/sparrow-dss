@@ -1,0 +1,40 @@
+* be in the directory where the changelog file lives, have properties file also live in the same folder as the changelog file, 
+so that the filename does not include the pathname and see different users/paths as a "change".  DO NOT check these files into svn.
+
+D:\KMSData\git_repos\sparrow-new\sparrow-dss\sparrow-liquibase\src\main\resources\liquibase
+
+commands:
+
+To see what needs to be updated:
+--------------------------------------------
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransSparrowDSS.properties status --verbose
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransStreamNetwork.properties status --verbose
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./dbtransSparrowDSS.properties status --verbose
+
+java -jar D:\KMSData\liquibase\liquibase.jar --defaultsFile=./dbtransSparrow.properties status --verbose
+
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransStreamNetwork.properties status --verbose
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./qatransStreamNetwork.properties status --verbose
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./dbtransStreamNetwork.properties status --verbose
+
+To run an update and rollback:
+--------------------------------------------
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransSparrow.properties updateTestingRollback
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./qatransSparrow.properties updateTestingRollback
+java -jar D:\KMSData\liquibase\liquibase.jar --defaultsFile=./dbtransSparrow.properties updateTestingRollback
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./dbtransSparrowDSS.properties updateTestingRollback
+
+
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransStreamNetwork.properties updateTestingRollback
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./qatransStreamNetwork.properties updateTestingRollback
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./dbtransStreamNetwork.properties updateTestingRollback
+
+To run an update:
+--------------------------------------------
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransSparrow.properties update
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./qatransSparrow.properties update
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./qatransSparrow.properties update
+
+
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./devtransStreamNetwork.properties changelogSyncSQL
+java -jar D:\KMSData\liquibase-3.4.1-bin\liquibase.jar --defaultsFile=./qatransSparrowDSS.properties changelogSyncSQL
