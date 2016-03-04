@@ -20,6 +20,7 @@ import gov.usgswim.sparrow.domain.SparrowModelBuilder;
 import gov.usgswim.sparrow.request.ModelRequestCacheKey;
 import gov.usgswim.sparrow.request.PredefinedSessionRequest;
 import gov.usgswim.sparrow.service.SharedApplication;
+import java.util.Arrays;
 
 public class LoadModelMetadata extends Action<List<SparrowModel>> {
 
@@ -127,6 +128,21 @@ public class LoadModelMetadata extends Action<List<SparrowModel>> {
 				m.setWestBound(rset.getDouble("BOUND_WEST"));
 				m.setConstituent(rset.getString("CONSTITUENT"));
 				m.setUsingSimpleReachIds(StringUtils.equalsIgnoreCase("T", rset.getString("IS_ID_FULLID_SAME")));
+				m.setIsNational("T".equals(rset.getString("IS_NATIONAL")));
+				m.setBaseYear(rset.getInt("BASE_YEAR"));
+				
+				String unsplitStates = rset.getString("STATES");
+				if(null != unsplitStates && !unsplitStates.trim().isEmpty()){
+					List<String> states = Arrays.asList(unsplitStates.trim().split(","));
+					m.setStates(states);
+				}
+				
+				String unsplitRegions = rset.getString("REGIONS");
+				if(null != unsplitRegions && !unsplitRegions.trim().isEmpty()){
+					List<String> regions = Arrays.asList(unsplitRegions.trim().split(","));
+					m.setRegions(regions);
+				}
+				
 				String sUnits = rset.getString("UNITS");
 				
 				//assume the string form of the unit is the enum name
