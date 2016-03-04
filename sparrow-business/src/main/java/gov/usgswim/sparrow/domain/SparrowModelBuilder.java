@@ -6,6 +6,7 @@ import gov.usgswim.sparrow.SparrowUnits;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,10 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
 	protected SparrowUnits _units;
 	protected List<Source> _sources;
 	private List<IPredefinedSession> _sessions;
+	protected List<String> _states;
+	protected List<String> _regions;
+	protected boolean _isNational;
+	protected int _baseYear;
 
 
 	public SparrowModelBuilder() {
@@ -54,27 +59,36 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
 	@SuppressWarnings("unchecked")
 	public SparrowModel toImmutable() throws IllegalStateException {
 
-		List<Source> tmpList = null;
-
+		List<Source> copiedSources = null;
+		List<String> copiedStates = null;
+		List<String> copiedRegions = null;
 		//Need a list of immutable sources
 		if (_sources != null) {
-			tmpList = new ArrayList<Source>(_sources.size());
+			copiedSources = new ArrayList<Source>(_sources.size());
 
 			for (int i = 0; i < _sources.size(); i++)  {
 				Source s = _sources.get(i);
 				if (s instanceof ImmutableBuilder) {
 					s = ((ImmutableBuilder<Source>)s).toImmutable();
 				}
-				tmpList.add(s);
+				copiedSources.add(s);
 			}
 		}
-
+		if(null != _states){
+			copiedStates = new ArrayList(_states.size());
+			Collections.copy(copiedStates, _states);
+		}
+		
+		if(null != _regions){
+			copiedRegions = new ArrayList(_regions.size());
+			Collections.copy(copiedRegions, _regions);
+		}
 		return new SparrowModelImm(
 			_id, _approved, _public, _archived, _name, _description, _url,
 			_dateAdded, _contactId, _enhNetworkId, _enhNetworkName, _enhNetworkUrl, _enhNetworkIdColumn,
 			_themeName,
 			_northBound, _eastBound, _southBound, _westBound, _constituent, _usingSimpleReachIds, _units, 
-			_sessions, tmpList);
+			_sessions, copiedSources, _isNational, _baseYear, copiedStates, copiedRegions);
 	}
 
 	public void setId(Long id) {_id = id;}
@@ -264,5 +278,40 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
 		return getSources().get(index);
 	}
 
+	@Override
+	public boolean isNational() {
+		return this._isNational;
+	}
+
+	public void setIsNational(boolean isNational) {
+		this._isNational = isNational;
+	}
+	
+	@Override
+	public int getBaseYear() {
+		return this._baseYear;
+	}
+
+	public void setBaseYear(int baseYear) {
+		this._baseYear = baseYear;
+	}
+	
+	@Override
+	public List<String> getStates() {
+		return this._states;
+	}
+
+	public void setStates(List<String> states){
+		this._states = states;
+	}
+	
+	@Override
+	public List<String> getRegions() {
+		return this._regions;
+	}
+
+	public void setRegions(List<String> regions){
+		this._regions = regions;
+	}
 
 }

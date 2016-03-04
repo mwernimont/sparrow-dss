@@ -217,4 +217,12 @@ public interface SparrowModel {
 	 */
 	public boolean isUsingSimpleReachIds();
 	
+	public boolean isNational();
+	
+	public int getBaseYear();
+	
+	public List<String> getStates();
+		
+	public List<String> getRegions();
+	
 }

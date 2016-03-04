@@ -40,6 +40,10 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	private final SparrowUnits _units;
 	private final List<Source> _sources;
 	private final List<IPredefinedSession> _sessions;
+	private List<String> _states;
+	private List<String> _regions;
+	private boolean _isNational;
+	private int _baseYear;
 
 	/*
 	private SparrowModelImm() {
@@ -79,7 +83,8 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 				String themeName,
 				Double northBound, Double eastBound, Double southBound, Double westBound,
 				String constituent, boolean usingSimpleReachIds, SparrowUnits units,
-				List<IPredefinedSession> sessions, List<Source> sources) {
+				List<IPredefinedSession> sessions, List<Source> sources, boolean isNational, int baseYear, 
+				List<String> states, List<String> regions) {
 
 		_id = id;
 		_approved = approved;
@@ -102,6 +107,9 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 		_constituent = constituent;
 		_usingSimpleReachIds = usingSimpleReachIds;
 		_units = units;
+		_isNational = isNational;
+		_baseYear = baseYear;
+		
                 if(sessions != null){
                         _sessions = Collections.unmodifiableList(sessions);
                 } else {
@@ -112,6 +120,18 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 			_sources = Collections.unmodifiableList(sources);
 		} else {
 			_sources = Collections.emptyList();
+		}
+		
+		if (states != null) {
+			_states = Collections.unmodifiableList(states);
+		} else {
+			_states = Collections.emptyList();
+		}
+		
+		if (regions != null) {
+			_regions = Collections.unmodifiableList(regions);
+		} else {
+			_regions = Collections.emptyList();
 		}
 	}
 
@@ -336,7 +356,25 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	protected static int getNonZeroDecimalPlaces(BigDecimal value) {
 		return value.stripTrailingZeros().scale();
 	}
-	
-	
+
+	@Override
+	public boolean isNational() {
+		return _isNational;
+	}
+
+	@Override
+	public int getBaseYear() {
+		return _baseYear;
+	}
+
+	@Override
+	public List<String> getStates() {
+		return _states;
+	}
+
+	@Override
+	public List<String> getRegions() {
+		return _regions;
+	}
 
 }
