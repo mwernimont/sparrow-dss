@@ -1,9 +1,8 @@
 Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 	region : undefined,
 	parameter : undefined,
-	uuid: undefined,
 	modelId: undefined,
-	
+	models : undefined,
 	/** Constants */
 	HISTORY_ITEM_SEPARATOR : ":",
 	HISTORY_NAME_VALUE_SEPARATOR : "=",
@@ -44,7 +43,35 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		
 		this.region = config.region;
 		this.parameter = config.parameter;
-		
+		this.models = config.models;
+		var containsInterestingRegion = function(regions, regionOfInterest){
+			var interestingRegions = regions.filter(function(region){
+				return region === 'national' || region === regionOfInterest;
+			});
+			return interestingRegions.length > 0;
+		};
+		this.getRelevantModels = function(regionOfInterest, parameterOfInterest){
+			parameterOfInterest = parameterOfInterest.toLowerCase();
+			regionOfInterest = regionOfInterest.toLowerCase();
+			//responses use 'constituent' instead of 'parameter'
+			var relevantModels = [].concat(this.models);
+			if(parameterOfInterest && 'any' !== parameterOfInterest){
+				relevantModels = relevantModels.filter(function(model){
+					return model.constituent.toLowerCase() === parameterOfInterest;
+				});
+			}
+			if(regionOfInterest && 'any' !== regionOfInterest){
+				relevantModels = relevantModels.filter(function(model){
+					var modelRegions = model.regions.split(',').map(function(region){
+						return region.trim();
+					});
+					
+					return containsInterestingRegion(modelRegions, regionOfInterest);
+				});
+			}
+			
+			return relevantModels;
+		};
 		config = Ext.apply({
 			
 		}, config);
@@ -63,41 +90,27 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			this.selectValue('region-combo-input', region);
 			this.selectValue('constituent-combo-input', param);
 			
-			var params = this.buildConfig(region, param);
-			var output = CSWClient.getQueryResultsAsHTML({query : params});
+			var relevantModels = this.getRelevantModels(region, param);
+			var output = Sparrow.index.ModelTemplater.listOfModels(relevantModels);
 			
 			this.updateModelList(output);
 		}, this);
 		
-		///////
-		this.on(this.METADATA_KEY, function(modelUUID) {
-
-			if (modelUUID != null) {
-				var htmlOutput = CSWClient.getRecordById({id : modelUUID});
-				
-				this.updateModelDisplay(htmlOutput, true);
-			}
-
-		}, this);
+		this.displayModelDetails = function(modelId) {
 		
-		this.on(this.MODELID_KEY, function(modelId) {
-
-			var modelUUID = null;
-			
-			if (modelId != null) {
-				//Find the UUID
-				var params = [modelId];
-				var fullXml = CSWClient.getQueryResultsAsXML({query : params});
-				modelUUID = CSWClient.findModelUUID(fullXml);
-			}
-			
-			if (modelUUID != null) {
-				var htmlOutput = CSWClient.getRecordById({id : modelUUID});
+			if (modelId !== null) {
+				var model = this.models.filter(function(model){
+					return model['@id'] === modelId;
+				});
+				var htmlOutput = Sparrow.index.ModelTemplater.modelDetails(model);
 				
 				this.updateModelDisplay(htmlOutput, true);
 			}
 
-		}, this);
+		};
+		
+		this.on(this.METADATA_KEY, this.displayModelDetails, this);
+		this.on(this.MODELID_KEY, this.displayModelDetails, this);
 		
 		this.on(this.NO_MODEL_ID_KEY, function() {
 
@@ -112,10 +125,6 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 
 
 		}, this);
-		
-		
-		
-		////
 	},
 	
 
@@ -267,7 +276,6 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		if (id) {
 			
 			this.fireEvent(this.METADATA_KEY, id);
-			this.uuid = id;
 			
 			//Right now we are picking the model ID out of an id'ed html element
 			//that is built from the returned xml.  Kind of inefficient, but

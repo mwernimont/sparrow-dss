@@ -19,23 +19,16 @@
 
 		<%--  cookies script included b/c EXT cookies does not support session cookies --%>
 		<script src="landing/js/ui/cookies.js?rev=1" type="text/javascript"></script>
-
+		<script src="landing/js/ui/comp/ModelTemplater.js" type="text/javascript"></script>
 		<script src="landing/js/ui/comp/Controller2.js?rev=1" type="text/javascript"></script>
-		<script type="text/javascript">
-			var CONTROLLER = new Sparrow.index.Controller({region : 'Any', parameter : 'Any'});
-		</script>
-
+		<script src="js/ModelSelector.js" type="text/javascript"></script>
 		<script src="landing/js/excat/scripts/sarissa.js?rev=1" type="text/javascript"></script>
 		<script src="landing/js/excat/scripts/sarissa_ieemu_xpath.js?rev=1"></script>
-		<script src="landing/js/ui/comp/CSWClient.js?rev=1" type="text/javascript"></script>
-		<script type="text/javascript">
-			var CSWClient = new Sparrow.index.CSWClient();
-		</script>
-
+		
 		<!-- Animation for changing model list -->
 		<script type="text/javascript" src="landing/js/ui/animator.min.js"></script>
 
-		<script src='js/Screencasts.js' type="text/javascript"></script>
+		<script src='screencast/js/Screencasts.js' type="text/javascript"></script>
         <script src="js/sparrow_rpc.js"></script>
 
 		<%--  onReady File  --%>
