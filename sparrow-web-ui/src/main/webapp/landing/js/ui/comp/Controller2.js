@@ -44,29 +44,46 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		this.region = config.region;
 		this.parameter = config.parameter;
 		this.models = config.models;
-		var containsInterestingRegion = function(regions, regionOfInterest){
-			var interestingRegions = regions.filter(function(region){
-				return region === 'national' || region === regionOfInterest;
-			});
-			return interestingRegions.length > 0;
+		var containsInterestingPlace = function(model, placeOfInterest){
+			var isInteresting = false;
+			if(model.isNational){
+				isInteresting = true;
+			} else {
+				if (model.states){
+					var interestingStates = model.states.filter(function(state){
+						return state.toLowerCase() === placeOfInterest;
+					});
+					isInteresting = interestingStates.length > 0;
+				}
+				//can skip if model's states are already interesting
+				if (!isInteresting && model.regions){
+					var interestingRegions = model.regions.filter(function(region){
+						return region.toLowerCase() === placeOfInterest;
+					});
+					isInteresting = interestingRegions.length > 0;
+				}
+			}
+			
+			return isInteresting;
 		};
-		this.getRelevantModels = function(regionOfInterest, parameterOfInterest){
+		this.getRelevantModels = function(placeOfInterest, parameterOfInterest){
 			parameterOfInterest = parameterOfInterest.toLowerCase();
-			regionOfInterest = regionOfInterest.toLowerCase();
-			//responses use 'constituent' instead of 'parameter'
+			placeOfInterest = placeOfInterest.toLowerCase();
+			
+			//the server model uses 'constituent' instead of 'parameter'
+			//the server model also spreads the client-side app's 
+			//'region' concept across three server-side variables : 'state', 
+			//'region', and, 'isNational'
+			
 			var relevantModels = [].concat(this.models);
 			if(parameterOfInterest && 'any' !== parameterOfInterest){
 				relevantModels = relevantModels.filter(function(model){
 					return model.constituent.toLowerCase() === parameterOfInterest;
 				});
 			}
-			if(regionOfInterest && 'any' !== regionOfInterest){
+			if(placeOfInterest && 'any' !== placeOfInterest){
 				relevantModels = relevantModels.filter(function(model){
-					var modelRegions = model.regions.split(',').map(function(region){
-						return region.trim();
-					});
-					
-					return containsInterestingRegion(modelRegions, regionOfInterest);
+					return containsInterestingPlace(model, placeOfInterest);
 				});
 			}
 			
