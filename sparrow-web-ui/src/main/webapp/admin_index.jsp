@@ -15,8 +15,60 @@
 	
 	<script type="text/javascript" src="webjars/extjs/3.4.1.1/adapter/ext/ext-base.js"></script>
 	<script type="text/javascript" src="webjars/extjs/3.4.1.1/ext-all.js"></script>
-	<script type="text/javascript" src="js/AdminModelSelector.js"></script>
+	<!--<script type="text/javascript" src="js/AdminModelSelector.js"></script>-->
+		<script type="text/javascript" src="js/ModelSelector.js"></script>
 
+	<script type="text/javascript">
+	(function(){
+		/*
+		 * Callback function for the model request.  This function renders the model
+		 * select box adding an option for each model returned.
+		 */
+		function renderModelList(response, request) {
+			var modelResponse = response.responseText;
+		    // Pull back the response
+		    var modelResponse = Ext.util.JSON.decode(modelResponse);
+
+		    var mcol1 = document.getElementById('models-col1');
+		    mcol1.innerHTML = '';
+		    var mcol2 = document.getElementById('models-col2');
+		    mcol2.innerHTML = '';
+		    for (var i = 0; i < modelResponse.models.model.length; i++) {
+			var model = modelResponse.models.model[i];
+			var bbox = model.bounds["@west"] + ',' + model.bounds["@south"] + ',' + model.bounds["@east"] + ',' + model.bounds["@north"];
+			var html =
+			    '<div class="model-item clearfix" style="display:block">' +
+					'<img src="images/model_screens/ss_model_' + model['@id'] + '.png" alt="model screen shot" class="model-screenshot"/>' +
+					'<div style="padding-left: 180px">' + 
+					'<div class="model-title"><a href="map.jsp?model=' + model['@id'] + '&bbox=' + bbox + '">' + model['name'] + '</a></div>' +
+					'<div class="model-dateadded">Added: ' + model['dateAdded'] + '</div>' +
+					'<div class="model-description">' + model['description'] + '</div>';
+
+			if (model.sessions && model.sessions.session) {
+				html += '<br/><div><u>Predefined Sessions:</u></div><ul>';
+				var sessions =  model.sessions.session;
+				for (var j = 0; j < sessions.length; j++){
+					var session = sessions[j];
+					html += '<li><a href="map.jsp?model=' + model['@id'] + '&session=' + session['@key'] + '">' + session['@key'] + '</a></li>';
+				}
+				html += '</ul>';
+
+			}
+
+
+			html += '</div></div>';
+			if (i < Math.floor(modelResponse.models.model.length / 2)) {
+				mcol1.innerHTML += html;
+			} else {
+				mcol2.innerHTML += html;
+			}
+		    }
+		};
+		Ext.onReady(function(){
+			loadModels(false, false, false, renderModelList);
+		});
+	}());
+	</script>
 	<jsp:include page="template_page_tracking.jsp" flush="true" />
 	
 </head>
