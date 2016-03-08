@@ -13,7 +13,7 @@
 		
 		Ext.each(models, function(model){
 			modelList += '<li><a href="javascript:(CONTROLLER.selectUUID("' + model['@id'] + '"))">' +
-				model.name + '</a><hr>';
+				model.name + '</a><hr></li>';
 		});
 
 
