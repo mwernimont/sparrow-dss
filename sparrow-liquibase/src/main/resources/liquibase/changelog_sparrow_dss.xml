@@ -28,5 +28,6 @@
 	<include file="addGeomViewSparrowDSS14/changeLog14Master.xml" relativeToChangelogFile="true" />
 	<include file="model54_55_theme_correction/changeLog15_Master.xml" relativeToChangelogFile="true" />
 	<include file="alterAndUpdateSparrowModel/alterAndUpdateSparrowModelMaster.xml" relativeToChangelogFile="true" />
+	<include file="addNatureToPredefinedSession/alterPredefinedSessionMaster.xml" relativeToChangelogFile="true" />
 	
 </databaseChangeLog>

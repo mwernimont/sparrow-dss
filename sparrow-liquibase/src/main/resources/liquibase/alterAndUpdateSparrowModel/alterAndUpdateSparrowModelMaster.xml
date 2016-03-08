@@ -12,6 +12,5 @@
 	</preConditions>
 
 	<include file="alterSparrowModel.sql" relativeToChangelogFile="true"/>
-	
 
 </databaseChangeLog>
