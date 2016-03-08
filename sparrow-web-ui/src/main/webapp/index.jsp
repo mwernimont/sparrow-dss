@@ -113,7 +113,7 @@
 						<dl>
 							{{#each sessions.scenarioSessions}}
 							<dt>
-								<a href="map.jsp?model={{../[@id]}}&amp;session={{[@key]}}">{{@name}}</a>
+								<a href="map.jsp?model={{../[@id]}}&amp;session={{[@key]}}">{{[@name]}}</a>
 							</dt>
 							<dd>
 								{{[@description]}}
