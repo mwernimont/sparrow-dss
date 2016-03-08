@@ -118,7 +118,7 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			if (modelId !== null) {
 				var model = this.models.filter(function(model){
 					return model['@id'] === modelId;
-				});
+				})[0];
 				var htmlOutput = Sparrow.index.ModelTemplater.modelDetails(model);
 				
 				this.updateModelDisplay(htmlOutput, true);

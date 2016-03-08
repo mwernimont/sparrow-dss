@@ -16,7 +16,116 @@
 			<%-- Namespace your project's code --%>
 			Ext.ns('Sparrow.index');
 		</script>
+		<script src="webjars/handlebars/4.0.5/handlebars.js"></script>
+		<script id="model-list-template" type="text/x-handlebars-template">
+			<div class="captioneddiv">
+				<ol>
+					{{#each models}}
+					<li>
+						<a href="javascript:(CONTROLLER.selectUUID('{{[@id]}}'))">{{name}}</a>
+						<hr>
+					</li>
+					{{/each}}
+				</ol>
+			</div>
+		</script>
+		<script id="model-details-template" type="text/x-handlebars-template">
+			<div class="preserve-format">
+				<div class="captioned-div">
+					<h3>{{name}}</h3>
+				</div>
 
+				<div id="model-main-link-header" class="preserve-format">
+					<div id="model-thumbnail">
+						<a title="click to explore this model in the decision support system" href=
+						"map.jsp?model={{[@id]}}"><img width="170" height=
+									"85" src=
+									"images/model_screens/ss_model_{{[@id]}}.png" /></a>
+					</div>
+
+					<div id="new-empty-session">
+						<button onclick=
+							"location = 'map.jsp?model={{[@id]}}'">Explore this
+							model in the<br />
+							Decision Support System &gt;&gt;</button>
+					</div>
+				</div>
+
+				<div id="sparrow-keywords-section">
+					<dl class="sparrow-keywords">
+						<dt>Modeled Constituent:</dt>
+						<dd>{{constituent}}</dd>
+
+						{{#if baseYear}}
+						<dt>Base Year:</dt>
+						<dd>{{baseYear}}</dd>
+						{{/if}}
+
+						{{#if networkUrl.length}}
+						<dt>Stream Network:</dt>
+						<dd><a href="{{networkUrl}}" title=
+						"The network model and associated geometry the model is based on">{{networkName}}</a><br />
+							<i>Geometry and additional reach and network attribute data are available with
+								the stream network data, which is available as a separate download.</i>\n\
+						</dd>
+						{{/if}}
+							
+						<dt class="sparrow_model_id">Model ID:</dt>
+
+						<dd id="sparrow_model_id_value" class="sparrow_model_id">{{[@id]}}</dd>
+
+						<dt>Reference:</dt>
+
+						<dd><a href="{{url}}" title=
+						"The model publication">{{description}}</a></dd>
+
+						<dt>Model Updates:</dt>
+
+						<dd><a href="modelUpdates.jsp#" title="Model Updates">View this model's updates</a></dd>
+					</dl>
+				</div>
+
+				<div class="captioneddiv">
+					{{#if sessions.watershedSessions.length}}
+					<div id="new-watershed-session" class="preserve-format">
+						<h3>Watershed Based Sessions</h3>
+
+						<p>To start the DSS with the outlet river reach of a major watershed selected for
+							downstream tracking, select a watershed and click <em>Go</em>.</p>
+						<select id= "select-watershed">
+							{{#each sessions.watershedSessions}}
+							<option value=
+								"map.jsp?model={{../[@id]}}&amp;session={{[@key]}}">
+								{{[@name]}}
+							</option>
+							{{/each}}
+						</select>
+						<button id="select-watershed-go-button" onclick=
+								 "CONTROLLER.launchModelWatershed();">Go &gt;&gt;</button>
+					</div>
+					{{/if}}
+					{{#if sessions.scenarioSessions.length}}
+					<div id="new-scenario-session" class="preserve-format">
+						<h3>Scenario Based Sessions</h3>
+
+						<p>To start the DSS with a predefined scenario, click on the link for one of the
+							scenarios below.</p>
+						<dl>
+							{{#each sessions.scenarioSessions}}
+							<dt>
+								<a href="map.jsp?model={{../[@id]}}&amp;session={{[@key]}}">{{@name}}</a>
+							</dt>
+							<dd>
+								{{[@description]}}
+							</dd>
+							{{/each}}
+						</dl>
+
+					</div>
+					{{/if}}
+				</div>
+			</div>
+		</script>
 		<%--  cookies script included b/c EXT cookies does not support session cookies --%>
 		<script src="landing/js/ui/cookies.js?rev=1" type="text/javascript"></script>
 		<script src="landing/js/ui/comp/ModelTemplater.js" type="text/javascript"></script>
