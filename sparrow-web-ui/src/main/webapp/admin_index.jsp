@@ -15,8 +15,7 @@
 	
 	<script type="text/javascript" src="webjars/extjs/3.4.1.1/adapter/ext/ext-base.js"></script>
 	<script type="text/javascript" src="webjars/extjs/3.4.1.1/ext-all.js"></script>
-	<!--<script type="text/javascript" src="js/AdminModelSelector.js"></script>-->
-		<script type="text/javascript" src="js/ModelSelector.js"></script>
+	<script type="text/javascript" src="js/ModelSelector.js"></script>
 
 	<script type="text/javascript">
 	(function(){
