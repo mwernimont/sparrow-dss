@@ -4,9 +4,9 @@
 
 --logicalFilePath: alterPredefinedSession.sql
 
---changeset cschroed:addNatureToPredefinedSession
+--changeset cschroed:addTopicToPredefinedSession
 alter table PREDEFINED_SESSION add (
-	nature nvarchar2(100),
+	topic nvarchar2(100),
 )
 
---rollback alter table PREDEFINED_SESSION drop (nature);
+--rollback alter table PREDEFINED_SESSION drop (topic);
