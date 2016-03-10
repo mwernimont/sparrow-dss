@@ -1,6 +1,7 @@
 package gov.usgswim.sparrow.request;
 
 import gov.usgswim.Immutable;
+import gov.usgswim.sparrow.domain.PredefinedSessionTopic;
 import gov.usgswim.sparrow.domain.PredefinedSessionType;
 
 import java.io.Serializable;
@@ -21,31 +22,7 @@ public class PredefinedSessionRequest implements Serializable {
 	private final Boolean approved;
 	private final PredefinedSessionType predefinedSessionType;
 	private final String groupName;
-	
-	public PredefinedSessionRequest(Long modelId, String groupName) {
-		
-		this.modelId = modelId;
-		this.approved = null;
-		this.predefinedSessionType = null;
-		this.groupName = groupName;
-	}
-	
-	
-	public PredefinedSessionRequest(Long modelId) {
-		
-		this.modelId = modelId;
-		this.approved = null;
-		this.predefinedSessionType = null;
-		this.groupName = null;
-	}
-	
-	public PredefinedSessionRequest(Long modelId, Boolean approved) {
-		
-		this.modelId = modelId;
-		this.approved = approved;
-		this.predefinedSessionType = null;
-		this.groupName = null;
-	}
+	private final PredefinedSessionTopic topic;
 	
 	public PredefinedSessionRequest(Long modelId, Boolean approved, PredefinedSessionType predefinedSessionType) {
 		
@@ -53,24 +30,17 @@ public class PredefinedSessionRequest implements Serializable {
 		this.approved = approved;
 		this.predefinedSessionType = predefinedSessionType;
 		this.groupName = null;
+		this.topic = null;
 	}
-	
-	public PredefinedSessionRequest(Long modelId, Boolean approved, String groupName) {
-		
-		this.modelId = modelId;
-		this.approved = approved;
-		this.predefinedSessionType = null;
-		this.groupName = groupName;
-	}
-	
 	
 	public PredefinedSessionRequest(Long modelId, Boolean approved,
-			PredefinedSessionType predefinedSessionType, String groupName) {
+			PredefinedSessionType predefinedSessionType, String groupName, PredefinedSessionTopic topic) {
 		
 		this.modelId = modelId;
 		this.approved = approved;
 		this.predefinedSessionType = predefinedSessionType;
 		this.groupName = groupName;
+		this.topic = topic;
 	}
 	
 
@@ -100,6 +70,12 @@ public class PredefinedSessionRequest implements Serializable {
 		return groupName;
 	}
 	
+	/**
+	 * @return the topic
+	 */
+	public PredefinedSessionTopic getTopic() {
+		return topic;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -122,6 +98,7 @@ public class PredefinedSessionRequest implements Serializable {
 		hash.append(approved);
 		hash.append(predefinedSessionType);
 		hash.append(groupName);
+		hash.append(topic);
 		return hash.toHashCode();
 	}
 

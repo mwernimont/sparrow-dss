@@ -111,6 +111,7 @@ public class DomainSerializer extends BasicXMLStreamReader {
 							.addAttribute("name", session.getName())
 							.addAttribute("description", session.getDescription())
 							.addAttribute("group_name", session.getGroupName())
+							.addAttribute("topic", session.getTopic().name())
 							.addAttribute("type", session.getPredefinedSessionType().name())
 							.addAttribute("approved", session.getApproved()?"T":"F")
 							.addAttribute("sort_order", Integer.toString(session.getSortOrder()))
