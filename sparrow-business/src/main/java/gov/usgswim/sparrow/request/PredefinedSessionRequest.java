@@ -24,12 +24,46 @@ public class PredefinedSessionRequest implements Serializable {
 	private final String groupName;
 	private final PredefinedSessionTopic topic;
 	
+	public PredefinedSessionRequest(Long modelId, String groupName) {
+		this.modelId = modelId;
+		this.approved = null;
+		this.predefinedSessionType = null;
+		this.groupName = groupName;
+		this.topic = null;
+	}
+
+	public PredefinedSessionRequest(Long modelId) {
+
+		this.modelId = modelId;
+		this.approved = null;
+		this.predefinedSessionType = null;
+		this.groupName = null;
+		this.topic = null;
+	}
+
+	public PredefinedSessionRequest(Long modelId, Boolean approved) {
+
+		this.modelId = modelId;
+		this.approved = approved;
+		this.predefinedSessionType = null;
+		this.groupName = null;
+		this.topic = null;
+	}
+	
 	public PredefinedSessionRequest(Long modelId, Boolean approved, PredefinedSessionType predefinedSessionType) {
 		
 		this.modelId = modelId;
 		this.approved = approved;
 		this.predefinedSessionType = predefinedSessionType;
 		this.groupName = null;
+		this.topic = null;
+	}
+	
+	public PredefinedSessionRequest(Long modelId, Boolean approved, String groupName) {
+		this.modelId = modelId;
+		this.approved = approved;
+		this.predefinedSessionType = null;
+		this.groupName = groupName;
 		this.topic = null;
 	}
 	

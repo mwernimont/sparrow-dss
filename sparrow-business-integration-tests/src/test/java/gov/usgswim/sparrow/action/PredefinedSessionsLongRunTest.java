@@ -326,7 +326,7 @@ public class PredefinedSessionsLongRunTest extends SparrowTestBaseWithDB {
 		assertEquals(newSessions[2].getId(), result.get(1).getId());
 		
 		//Should be 1 approved, in group 'set3', and UNLISTED
-		request = new PredefinedSessionRequest(9999L, true, PredefinedSessionType.UNLISTED, "set3");
+		request = new PredefinedSessionRequest(9999L, true, PredefinedSessionType.UNLISTED, "set3", null);
 		result = SharedApplication.getInstance().getPredefinedSessions(request);
 		assertEquals(1, result.size());
 		assertEquals(newSessions[5].getId(), result.get(0).getId());
