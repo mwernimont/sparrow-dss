@@ -40,10 +40,10 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	private final SparrowUnits _units;
 	private final List<Source> _sources;
 	private final List<IPredefinedSession> _sessions;
-	private List<String> _states;
-	private List<String> _regions;
-	private boolean _isNational;
-	private int _baseYear;
+	private final List<String> _states;
+	private final List<String> _regions;
+	private final boolean _isNational;
+	private final int _baseYear;
 
 	/*
 	private SparrowModelImm() {
