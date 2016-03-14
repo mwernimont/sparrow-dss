@@ -54,16 +54,77 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
 	public SparrowModelBuilder(long id) {
 		_id = id;
 	}
-        
+	private List<IPredefinedSession> copySessions(List<IPredefinedSession> sessions){
+		List<IPredefinedSession> copy;
+		if (sessions != null) {
+			PredefinedSessionBuilder sessionBuilder;
+
+			List<IPredefinedSession> sessionsCopy = new ArrayList<>(sessions.size());
+			for (IPredefinedSession session : sessions) {
+				sessionBuilder = new PredefinedSessionBuilder(session);
+				PredefinedSession tempSession = sessionBuilder.toImmutable();
+				sessionsCopy.add(tempSession);
+			}
+
+			copy = Collections.unmodifiableList(sessionsCopy);
+		} else {
+			copy = Collections.emptyList();
+		}
+		
+		return copy;
+	}
+	
+	private List<Source> copySources(List<Source> sources){
+		List<Source> copy;
+		if (sources != null) {
+			SourceBuilder sourceBuilder;
+			List<Source> sourcesCopy = new ArrayList<>(sources.size());
+			for (Source source : sources) {
+				sourceBuilder = new SourceBuilder(source);
+				Source tempSource = sourceBuilder.toImmutable();
+				sourcesCopy.add(tempSource);
+			}
+			copy = Collections.unmodifiableList(sourcesCopy);
+		} else {
+			copy = Collections.emptyList();
+		}
+		return copy;
+	}
+	
+        private List<String> copyStringList(List<String> source){
+		List<String> destination;
+		if(null == source) {
+			destination = Collections.emptyList();
+		} else {
+			destination = new ArrayList<>(source.size());
+			//shallow copy is ok -- Strings are immutable
+			for(String str : source){
+				destination.add(str);
+			}
+			destination = Collections.unmodifiableList(destination);
+		}
+		return destination;
+	}
+
+	
         @Override
 	@SuppressWarnings("unchecked")
 	public SparrowModel toImmutable() throws IllegalStateException {
+		
+		//copy out the sources into an immutable list
+		
+		List<IPredefinedSession> sessionsCopy = copySessions(_sessions);
+		List<Source> sourcesCopy = copySources(_sources);
+		List<String> statesCopy = copyStringList(_states);
+		List<String> regionsCopy = copyStringList(_regions);
+		Date dateAddedCopy = null == _dateAdded ? null : (Date) _dateAdded.clone();
+		
 		return new SparrowModelImm(
 			_id, _approved, _public, _archived, _name, _description, _url,
-			_dateAdded, _contactId, _enhNetworkId, _enhNetworkName, _enhNetworkUrl, _enhNetworkIdColumn,
+			dateAddedCopy, _contactId, _enhNetworkId, _enhNetworkName, _enhNetworkUrl, _enhNetworkIdColumn,
 			_themeName,
 			_northBound, _eastBound, _southBound, _westBound, _constituent, _usingSimpleReachIds, _units, 
-			_sessions, _sources, _isNational, _baseYear, _states, _regions);
+			sessionsCopy, sourcesCopy, _isNational, _baseYear, statesCopy, regionsCopy);
 	}
 
 	public void setId(Long id) {_id = id;}

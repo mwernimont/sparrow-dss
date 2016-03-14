@@ -54,6 +54,11 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 
 	/**
 	 * Constructs an immutable SparrowModel instance.
+	 * This constructor does not perform deep copies of mutable parameters.
+	 * This constructor is meant to be accessed by factories or builders in
+	 * the same package. Those classes, not this class, bear the 
+	 * responsibility for deep-copying the lists to ensure that an instance
+	 * is truly immutable.
 	 *
 	 * @param id
 	 * @param approved
@@ -74,7 +79,7 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	 * @param sessions
 	 * @param sources
 	 */
-	public SparrowModelImm(Long id, boolean approved, boolean isPublic, boolean archived,
+	protected SparrowModelImm(Long id, boolean approved, boolean isPublic, boolean archived,
 				String name, String description, String url, Date dateAdded,
 				Long contactId, Long enhNetworkId, String enhNetworkName, String enhNetworkUrl, String enhNetworkIdColumn,
 				String themeName,
@@ -105,58 +110,13 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 		_units = units;
 		_isNational = isNational;
 		_baseYear = baseYear;
-		_dateAdded = (Date)dateAdded.clone();
-		
-                if(sessions != null){
-			PredefinedSessionBuilder sessionBuilder;
+		_dateAdded = dateAdded;
+		_sessions = sessions;
+		_sources = sources;
+		_regions = regions;
+		_states = states;
+	}
 
-			List<IPredefinedSession> sessionsCopy = new ArrayList<>(sessions.size());
-			for(IPredefinedSession session : sessions){
-				sessionBuilder = new PredefinedSessionBuilder(session);
-				PredefinedSession tempSession = sessionBuilder.toImmutable();
-				sessionsCopy.add(tempSession);
-			}
-			
-                        _sessions = Collections.unmodifiableList(sessionsCopy);
-                } else {
-                        _sessions = Collections.emptyList();
-                }
-		//copy out the sources into an immutable list
-		if (sources != null) {
-			SourceBuilder sourceBuilder;
-			List<Source> sourcesCopy = new ArrayList<>(sources.size());
-			for(Source source : sources){
-				sourceBuilder = new SourceBuilder(source);
-				Source tempSource = sourceBuilder.toImmutable();
-				sourcesCopy.add(tempSource);
-			}
-			_sources = Collections.unmodifiableList(sourcesCopy);
-		} else {
-			_sources = Collections.emptyList();
-		}
-		
-		if (states != null) {
-			_states = Collections.unmodifiableList(copyStringList(states));
-		} else {
-			_states = Collections.emptyList();
-		}
-		
-		if (regions != null) {
-			_regions = Collections.unmodifiableList(copyStringList(regions));
-		} else {
-			_regions = Collections.emptyList();
-		}
-	}
-	
-	private List<String> copyStringList(List<String> source){
-		ArrayList<String> destination = new ArrayList<>(source.size());
-		//shallow copy is ok -- Strings are immutable
-		for(String str : source){
-			destination.add(str);
-		}
-		return destination;
-	}
-	
 	public Long getId() {return _id;}
 
 	@Override
