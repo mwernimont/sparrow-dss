@@ -155,10 +155,10 @@
 		</profile>
 		
 		<profile>
-			<id>sonar-build</id>
+			<id>sonar_build</id>
 			<activation>
 				<property>
-					<name>sonar-build</name>
+					<name>sonar_build</name>
 					<value>true</value>
 				</property>
 			</activation>
