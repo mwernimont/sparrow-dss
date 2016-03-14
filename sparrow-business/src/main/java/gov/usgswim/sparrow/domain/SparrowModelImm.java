@@ -5,6 +5,7 @@ import gov.usgswim.sparrow.SparrowUnits;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -54,10 +55,6 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	/**
 	 * Constructs an immutable SparrowModel instance.
 	 *
-	 * Note:  To be truly immutable, the Sources in the passed list must be
-	 * immutable - this is the caller's responsibility.  The passed list does
-	 * not need to be immutable b/c the values will be copied out.
-	 *
 	 * @param id
 	 * @param approved
 	 * @param isPublic
@@ -93,7 +90,6 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 		_name = name;
 		_description = description;
 		_url = url;
-		_dateAdded = dateAdded;
 		_contactId = contactId;
 		_enhNetworkId = enhNetworkId;
 		_enhNetworkName = enhNetworkName;
@@ -109,32 +105,58 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 		_units = units;
 		_isNational = isNational;
 		_baseYear = baseYear;
+		_dateAdded = (Date)dateAdded.clone();
 		
                 if(sessions != null){
-                        _sessions = Collections.unmodifiableList(sessions);
+			PredefinedSessionBuilder sessionBuilder;
+
+			List<IPredefinedSession> sessionsCopy = new ArrayList<>(sessions.size());
+			for(IPredefinedSession session : sessions){
+				sessionBuilder = new PredefinedSessionBuilder(session);
+				PredefinedSession tempSession = sessionBuilder.toImmutable();
+				sessionsCopy.add(tempSession);
+			}
+			
+                        _sessions = Collections.unmodifiableList(sessionsCopy);
                 } else {
                         _sessions = Collections.emptyList();
                 }
 		//copy out the sources into an immutable list
 		if (sources != null) {
-			_sources = Collections.unmodifiableList(sources);
+			SourceBuilder sourceBuilder;
+			List<Source> sourcesCopy = new ArrayList<>(sources.size());
+			for(Source source : sources){
+				sourceBuilder = new SourceBuilder(source);
+				Source tempSource = sourceBuilder.toImmutable();
+				sourcesCopy.add(tempSource);
+			}
+			_sources = Collections.unmodifiableList(sourcesCopy);
 		} else {
 			_sources = Collections.emptyList();
 		}
 		
 		if (states != null) {
-			_states = Collections.unmodifiableList(states);
+			_states = Collections.unmodifiableList(copyStringList(states));
 		} else {
 			_states = Collections.emptyList();
 		}
 		
 		if (regions != null) {
-			_regions = Collections.unmodifiableList(regions);
+			_regions = Collections.unmodifiableList(copyStringList(regions));
 		} else {
 			_regions = Collections.emptyList();
 		}
 	}
-
+	
+	private List<String> copyStringList(List<String> source){
+		ArrayList<String> destination = new ArrayList<>(source.size());
+		//shallow copy is ok -- Strings are immutable
+		for(String str : source){
+			destination.add(str);
+		}
+		return destination;
+	}
+	
 	public Long getId() {return _id;}
 
 	@Override

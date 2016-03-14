@@ -58,37 +58,12 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
         @Override
 	@SuppressWarnings("unchecked")
 	public SparrowModel toImmutable() throws IllegalStateException {
-
-		List<Source> copiedSources = null;
-		List<String> copiedStates = null;
-		List<String> copiedRegions = null;
-		//Need a list of immutable sources
-		if (_sources != null) {
-			copiedSources = new ArrayList<Source>(_sources.size());
-
-			for (int i = 0; i < _sources.size(); i++)  {
-				Source s = _sources.get(i);
-				if (s instanceof ImmutableBuilder) {
-					s = ((ImmutableBuilder<Source>)s).toImmutable();
-				}
-				copiedSources.add(s);
-			}
-		}
-		if(null != _states){
-			copiedStates = new ArrayList(_states.size());
-			Collections.copy(copiedStates, _states);
-		}
-		
-		if(null != _regions){
-			copiedRegions = new ArrayList(_regions.size());
-			Collections.copy(copiedRegions, _regions);
-		}
 		return new SparrowModelImm(
 			_id, _approved, _public, _archived, _name, _description, _url,
 			_dateAdded, _contactId, _enhNetworkId, _enhNetworkName, _enhNetworkUrl, _enhNetworkIdColumn,
 			_themeName,
 			_northBound, _eastBound, _southBound, _westBound, _constituent, _usingSimpleReachIds, _units, 
-			_sessions, copiedSources, _isNational, _baseYear, copiedStates, copiedRegions);
+			_sessions, _sources, _isNational, _baseYear, _states, _regions);
 	}
 
 	public void setId(Long id) {_id = id;}
@@ -298,7 +273,7 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
 	
 	@Override
 	public List<String> getStates() {
-		return this._states;
+		return (List<String>) (null == this._states ? Collections.emptyList() : this._states);
 	}
 
 	public void setStates(List<String> states){
@@ -307,7 +282,7 @@ public class SparrowModelBuilder implements SparrowModel, ImmutableBuilder<Sparr
 	
 	@Override
 	public List<String> getRegions() {
-		return this._regions;
+		return (List<String>) (null == this._regions ? Collections.emptyList() : this._regions);
 	}
 
 	public void setRegions(List<String> regions){

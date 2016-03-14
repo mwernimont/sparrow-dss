@@ -19,8 +19,8 @@ public enum SparrowUnits {
 	UNSPECIFIED("unspecified", "unspecified")
 	;
 
-	private String userName;
-	private String description;
+	private final String userName;
+	private final String description;
 	
 	SparrowUnits(String name, String description) {
 		this.userName = name;
