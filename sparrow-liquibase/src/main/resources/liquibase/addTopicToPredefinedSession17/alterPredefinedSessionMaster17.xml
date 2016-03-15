@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
-	logicalFilePath="alterPredefinedSessionMaster.xml"> 
+	logicalFilePath="alterPredefinedSessionMaster17.xml"> 
 
 	<preConditions>
 		<dbms type="oracle" />
 		<runningAs username="SPARROW_DSS_TRANS" />
 	</preConditions>
 
-	<include file="alterPredefinedSession.sql" relativeToChangelogFile="true"/>
+	<include file="alterPredefinedSession17.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
