@@ -78,6 +78,7 @@ public class SavePredefinedSession extends Action<IPredefinedSession> {
 		paramMap.put("SORT_ORDER", session.getSortOrder());
 		paramMap.put("CONTEXT_STRING", session.getContextString());
 		paramMap.put("GROUP_NAME", session.getGroupName());
+		paramMap.put("TOPIC", session.getTopic().name());
 		
 		//Allow these fields to be edited, but not the add_date
 		paramMap.put("ADD_BY", session.getAddBy());

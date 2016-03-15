@@ -90,11 +90,13 @@ public class PredefinedSession implements IPredefinedSession  {
 	 */
 	private final String groupName;
 	
+	private final PredefinedSessionTopic topic;
+	
 	public PredefinedSession(Long id, String uniqueCode, Long modelId,
 			PredefinedSessionType predefinedSessionType, Boolean approved,
 			String name, String description, Integer sortOrder,
 			String contextString, Date addDate, String addBy, String addNote,
-			String addContactInfo, String groupName) {
+			String addContactInfo, String groupName, PredefinedSessionTopic topic) {
 		
 		this.id = id;
 		this.uniqueCode = uniqueCode;
@@ -110,6 +112,7 @@ public class PredefinedSession implements IPredefinedSession  {
 		this.addNote = addNote;
 		this.addContactInfo = addContactInfo;
 		this.groupName = groupName;
+		this.topic = topic;
 	}
 	
 	
@@ -211,6 +214,10 @@ public class PredefinedSession implements IPredefinedSession  {
 	 */
 	public String getGroupName() {
 		return groupName;
+	}
+	
+	public PredefinedSessionTopic getTopic() {
+		return topic;
 	}
 
 }

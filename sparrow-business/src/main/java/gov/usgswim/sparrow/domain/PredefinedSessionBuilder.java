@@ -91,6 +91,11 @@ public class PredefinedSessionBuilder implements XMLStreamParserComponent, IPred
 	 */
 	private String groupName;
 	
+	/**
+	 * What the session focuses on
+	 */
+	private PredefinedSessionTopic topic;
+	
 	public PredefinedSessionBuilder() {
 		
 	}
@@ -110,6 +115,7 @@ public class PredefinedSessionBuilder implements XMLStreamParserComponent, IPred
 		this.addNote = makeMeMutable.getAddNote();
 		this.addContactInfo = makeMeMutable.getAddContactInfo();
 		this.groupName = makeMeMutable.getGroupName();
+		this.topic = makeMeMutable.getTopic();
 	}
 
 	
@@ -360,8 +366,17 @@ public class PredefinedSessionBuilder implements XMLStreamParserComponent, IPred
 	public PredefinedSession toImmutable() throws IllegalStateException {
 		PredefinedSession s = new PredefinedSession(id, uniqueCode, modelId,
 			predefinedSessionType, approved, name, description, sortOrder,
-			contextString, addDate, addBy, addNote, addContactInfo, groupName);
+			contextString, addDate, addBy, addNote, addContactInfo, groupName, topic);
 		return s;
+	}
+
+	@Override
+	public PredefinedSessionTopic getTopic() {
+		return this.topic;
+	}
+
+	public void setTopic(PredefinedSessionTopic topic) {
+		this.topic = topic;
 	}
 
 }

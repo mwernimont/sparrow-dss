@@ -74,5 +74,10 @@ public interface IPredefinedSession extends Serializable {
 	 * @return the customCategory
 	 */
 	public String getGroupName();
+	
+	/**
+	 * @return the topic
+	 */
+	public PredefinedSessionTopic getTopic();
 
 }
