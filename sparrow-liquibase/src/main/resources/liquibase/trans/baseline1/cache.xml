@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+	<preConditions onFail="MARK_RAN">
+		<not>
+			<tableExists schemaName="sparrow_dss_trans" tableName="generic_cache"/>
+		</not>
+	</preConditions>
+	<changeSet author="cschroed (generated)" id="1458070061306-3">
+		<createTable tableName="GENERIC_CACHE">
+			<column name="KEY" type="NUMBER(10, 0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VALUE_CLASS" type="VARCHAR2(100)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VALUE" type="BLOB"/>
+			<column name="LAST_TOUCHED" type="TIMESTAMP(6)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="cschroed (generated)" id="1458070061306-10">
+		<createIndex indexName="GENERIC_CACHE_LAST_TOUCHED" tableName="GENERIC_CACHE">
+			<column name="LAST_TOUCHED"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="cschroed (generated)" id="1458070061306-11">
+		<createIndex indexName="GENERIC_CACHE_UK" tableName="GENERIC_CACHE" unique="true">
+			<column name="VALUE_CLASS"/>
+			<column name="KEY"/>
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

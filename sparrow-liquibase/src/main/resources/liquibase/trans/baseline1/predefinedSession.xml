@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+	<preConditions onFail="MARK_RAN">
+		<not>
+			<tableExists schemaName="sparrow_dss_trans" tableName="predefined_session"/>
+		</not>
+	</preConditions>
+	<changeSet author="cschroed (generated)" id="1458070061306-1">
+		<createSequence cacheSize="20" cycle="false" incrementBy="1" maxValue="99999999999999999999999999" minValue="1" ordered="true" sequenceName="PREDEFINED_SESSION_SEQ" startValue="2424"/>
+	</changeSet>
+	<changeSet author="cschroed (generated)" id="1458070061306-4">
+		<createTable tableName="PREDEFINED_SESSION">
+			<column name="PREDEFINED_SESSION_ID" remarks="Database unique ID" type="NUMBER(9, 0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="UNIQUE_CODE" remarks="User speced unique code.  Allows a more memorable id than the PK" type="VARCHAR2(60)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SPARROW_MODEL_ID" remarks="The model this pre-theme is for.  CONSTAINED" type="NUMBER(9, 0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PREDEFINED_TYPE" remarks="CONSTRAINED TO: FEATURED, LISTED or UNLISTED" type="VARCHAR2(10)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="APPROVED" remarks="CONSTRAINED TO: T or F" type="CHAR(1)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" remarks="A display name" type="VARCHAR2(60)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESCRIPTION" remarks="A description, possibly w/ some html." type="NCLOB"/>
+			<column defaultValueComputed="(0)" name="SORT_ORDER" remarks="A low to high sorting value within a model." type="NUMBER(2, 0)"/>
+			<column name="CONTEXT_STRING" remarks="The actual text of the predefined theme." type="NCLOB">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ADD_DATE" remarks="The date-time the theme was added." type="date"/>
+			<column name="ADD_BY" remarks="The person who added the pre-theme." type="VARCHAR2(60)"/>
+			<column name="ADD_NOTE" remarks="A note by the creator to the approving admin." type="NCLOB"/>
+			<column name="ADD_CONTACT_INFO" remarks="Contact info for the person creating the theme." type="NCLOB"/>
+			<column name="GROUP_NAME" remarks="User speced category to allow grouping within a model" type="VARCHAR2(60)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="cschroed (generated)" id="1458070061306-6">
+		<createIndex indexName="PREDEFINED_SESSION_PK" tableName="PREDEFINED_SESSION" unique="true">
+			<column name="PREDEFINED_SESSION_ID"/>
+		</createIndex>
+		<addPrimaryKey columnNames="PREDEFINED_SESSION_ID" constraintName="PREDEFINED_SESSION_PK" forIndexName="PREDEFINED_SESSION_PK" tableName="PREDEFINED_SESSION"/>
+	</changeSet>
+	<changeSet author="cschroed (generated)" id="1458070061306-8">
+		<createIndex indexName="PREDEFINED_SESSION_UNIQUE_CODE" tableName="PREDEFINED_SESSION" unique="true">
+			<column name="UNIQUE_CODE"/>
+		</createIndex>
+		<addUniqueConstraint columnNames="UNIQUE_CODE" constraintName="PREDEFINED_SESSION_UNIQUE_CODE" forIndexName="PREDEFINED_SESSION_UNIQUE_CODE" tableName="PREDEFINED_SESSION"/>
+	</changeSet>
+	<changeSet author="cschroed (generated)" id="1458070061306-12">
+		<addForeignKeyConstraint baseColumnNames="SPARROW_MODEL_ID" baseTableName="PREDEFINED_SESSION" constraintName="PREDEFINED_SESSION_SP_MODEL_FK" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="SPARROW_MODEL_ID" referencedTableName="SPARROW_DSS.SPARROW_MODEL"/>
+	</changeSet>
+
+</databaseChangeLog>
