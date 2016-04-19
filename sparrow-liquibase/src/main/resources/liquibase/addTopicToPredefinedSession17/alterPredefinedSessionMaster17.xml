@@ -8,7 +8,7 @@
 
 	<preConditions>
 		<dbms type="oracle" />
-		<runningAs username="SPARROW_DSS_TRANS" />
+		<runningAs username="SPARROW_DSS" />
 	</preConditions>
 
 	<include file="alterPredefinedSession17.sql" relativeToChangelogFile="true"/>
