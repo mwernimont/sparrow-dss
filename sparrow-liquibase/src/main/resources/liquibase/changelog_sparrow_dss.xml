@@ -28,6 +28,7 @@
 	<include file="addGeomViewSparrowDSS14/changeLog14Master.xml" relativeToChangelogFile="true" />
 	<include file="model54_55_theme_correction/changeLog15_Master.xml" relativeToChangelogFile="true" />
 	<include file="alterAndUpdateSparrowModel16/alterAndUpdateSparrowModelMaster16.xml" relativeToChangelogFile="true" />
-	<include file="addTopicToPredefinedSession17/alterPredefinedSessionMaster17.xml" relativeToChangelogFile="true" />
+	<include file="createPredefinedSession17/createPredefinedSessionMaster17.xml" relativeToChangelogFile="true" />
+	<include file="addTopicToPredefinedSession18/alterPredefinedSessionMaster18.xml" relativeToChangelogFile="true" />
 	
 </databaseChangeLog>

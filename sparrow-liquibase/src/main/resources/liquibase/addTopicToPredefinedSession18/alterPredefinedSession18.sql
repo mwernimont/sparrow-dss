@@ -2,7 +2,7 @@
 
 --This is for the sparrow_dss schema
 
---logicalFilePath: alterPredefinedSession17.sql
+--logicalFilePath: alterPredefinedSession18.sql
 
 --changeset cschroed:addTopicToPredefinedSession
 alter table PREDEFINED_SESSION add (
