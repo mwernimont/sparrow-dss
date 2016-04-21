@@ -11,7 +11,7 @@ alter table SPARROW_MODEL add (
 	is_national char(1) DEFAULT 'F',
 	regions nvarchar2(100),
 	base_year number
-)
+);
 
 alter table SPARROW_MODEL move COMPRESS;
 
