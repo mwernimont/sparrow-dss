@@ -12,5 +12,11 @@
 	</preConditions>
 
 	<include file="createPredefinedSession17.sql" relativeToChangelogFile="true"/>
-
+	<changeSet author="cschroed" id="addAutoIncrementPKtoPredefinedSession">
+		<sqlFile 
+			path="predefinedSessionTrigger17.sql"
+			relativeToChangelogFile="true"
+			splitStatements="false"
+		/>
+	</changeSet>
 </databaseChangeLog>
