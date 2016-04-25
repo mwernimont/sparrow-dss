@@ -6,7 +6,7 @@
 
 --changeset cschroed:addTopicToPredefinedSession
 alter table PREDEFINED_SESSION add (
-	topic nvarchar2(100),
+	topic nvarchar2(100)
 )
 
 --rollback alter table PREDEFINED_SESSION drop (topic);
