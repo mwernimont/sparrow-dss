@@ -2,6 +2,7 @@ package gov.usgswim.sparrow.action;
 
 import gov.usgswim.sparrow.domain.IPredefinedSession;
 import gov.usgswim.sparrow.domain.PredefinedSessionBuilder;
+import gov.usgswim.sparrow.domain.PredefinedSessionTopic;
 import gov.usgswim.sparrow.request.PredefinedSessionUniqueRequest;
 
 import java.sql.Date;
@@ -78,7 +79,9 @@ public class SavePredefinedSession extends Action<IPredefinedSession> {
 		paramMap.put("SORT_ORDER", session.getSortOrder());
 		paramMap.put("CONTEXT_STRING", session.getContextString());
 		paramMap.put("GROUP_NAME", session.getGroupName());
-		paramMap.put("TOPIC", session.getTopic().name());
+		PredefinedSessionTopic topic = session.getTopic();
+		String topicStr = null == topic ? null : topic.name();
+		paramMap.put("TOPIC", topicStr);
 		
 		//Allow these fields to be edited, but not the add_date
 		paramMap.put("ADD_BY", session.getAddBy());
