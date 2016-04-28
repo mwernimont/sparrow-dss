@@ -30,5 +30,6 @@
 	<include file="alterAndUpdateSparrowModel16/alterAndUpdateSparrowModelMaster16.xml" relativeToChangelogFile="true" />
 	<include file="createPredefinedSession17/createPredefinedSessionMaster17.xml" relativeToChangelogFile="true" />
 	<include file="addTopicToPredefinedSession18/alterPredefinedSessionMaster18.xml" relativeToChangelogFile="true" />
+	<include file="createGenericCache19/createGenericCacheMaster19.xml" relativeToChangelogFile="true" />
 	
 </databaseChangeLog>
