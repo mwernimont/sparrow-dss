@@ -19,7 +19,7 @@ CREATE INDEX "GENERIC_CACHE_LAST_TOUCHED" ON "GENERIC_CACHE" ("LAST_TOUCHED");
 
 --changeset cschroed:createGenericCacheUniqueIndex
 CREATE UNIQUE INDEX "GENERIC_CACHE_UK" ON "GENERIC_CACHE" ("VALUE_CLASS", "KEY");
---rollback drop index 'GENERIC_CACHE_UK';
+--rollback drop index GENERIC_CACHE_UK;
 
 --changeset cschroed:genericCacheLastTouchedNotNull
 ALTER TABLE "GENERIC_CACHE" MODIFY ("LAST_TOUCHED" NOT NULL ENABLE);
