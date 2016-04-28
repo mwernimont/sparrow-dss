@@ -98,13 +98,8 @@ public class LoadPredefinedSessions extends Action<List<IPredefinedSession>> {
 			s.setAddContactInfo(rset.getString("ADD_CONTACT_INFO"));
 			s.setGroupName(rset.getString("GROUP_NAME"));
 			String topicStr = rset.getString("TOPIC");
-			if(null != topicStr){
-				PredefinedSessionTopic topic = PredefinedSessionTopic.fromString(topicStr);
-				if(null != topic){
-					s.setTopic(topic);
-				}
-			}
-			
+			PredefinedSessionTopic topic = null == topicStr ? null : PredefinedSessionTopic.valueOf(topicStr);
+			s.setTopic(topic);
 			
 			sessions.add(s.toImmutable());
 		}

@@ -80,7 +80,7 @@ public class SavePredefinedSession extends Action<IPredefinedSession> {
 		paramMap.put("CONTEXT_STRING", session.getContextString());
 		paramMap.put("GROUP_NAME", session.getGroupName());
 		PredefinedSessionTopic topic = session.getTopic();
-		String topicStr = null == topic ? null : topic.toString();
+		String topicStr = null == topic ? null : topic.name();
 		paramMap.put("TOPIC", topicStr);
 		
 		//Allow these fields to be edited, but not the add_date
