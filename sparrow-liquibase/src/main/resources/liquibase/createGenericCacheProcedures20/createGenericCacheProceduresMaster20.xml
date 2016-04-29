@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+	logicalFilePath="alterPredefinedSessionMaster17.xml"> 
+
+	<preConditions>
+		<dbms type="oracle" />
+		<runningAs username="SPARROW_DSS" />
+	</preConditions>
+	<changeSet author="cschroed" id="createRefCursor">
+		<sqlFile 
+			path="createRefCursor20.sql"
+			relativeToChangelogFile="true"
+			splitStatements="false"
+		/>
+		<rollback>
+			DROP PACKAGE TYPES;
+		</rollback>
+	</changeSet>
+	<changeSet author="cschroed" id="findGenericCacheProcedure">
+		<sqlFile 
+			path="findGenericCacheProcedure20.sql"
+			relativeToChangelogFile="true"
+			splitStatements="false"
+		/>
+		<rollback>
+			drop procedure GENERIC_CACHE_BY_CLS_AND_CODE;
+		</rollback>
+	</changeSet>
+	<changeSet author="cschroed" id="deleteFromGenericCacheProcedure">
+		<sqlFile 
+			path="deleteFromGenericCacheProcedure20.sql"
+			relativeToChangelogFile="true"
+			splitStatements="false"
+		/>
+		<rollback>
+			drop procedure GENERIC_CACHE_DELETE_OLD_ROWS;
+		</rollback>
+	</changeSet>
+	
+</databaseChangeLog>
