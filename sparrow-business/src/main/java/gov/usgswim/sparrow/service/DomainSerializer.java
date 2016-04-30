@@ -94,6 +94,27 @@ public class DomainSerializer extends BasicXMLStreamReader {
 				addNonNullBasicTag("themeName", model.getThemeName());
 				addNonNullBasicTag("constituent", model.getConstituent());
 				addNonNullBasicTag("units", model.getUnits().getUserName());
+				addNonNullBasicTag("baseYear", Integer.toString(model.getBaseYear()));
+				addOpenTag("spatialMembership");
+					if(model.isNational()) {
+						//If model is national then it pertains to all states and regions. 
+						//Declare model as national. Do not enumerate other memberships.
+						addNonNullBasicTag("national", Boolean.toString(model.isNational()));
+					} else {
+						//model is not national, so the subset of pertinent states and regions
+						//must be enumerated
+						addOpenTag("states");
+							for(String state : model.getStates()){
+								addNonNullBasicTag("state", state);
+							}
+						addCloseTag("states");
+						addOpenTag("regions");
+							for(String region : model.getRegions()){
+								addNonNullBasicTag("region", region);
+							}
+						addCloseTag("regions");
+					}
+				addCloseTag("spatialMembership");
 				events.add(new BasicTagEvent("bounds", null)
 					.addAttribute("north", model.getNorthBound().toString())
 					.addAttribute("west", model.getWestBound().toString())
