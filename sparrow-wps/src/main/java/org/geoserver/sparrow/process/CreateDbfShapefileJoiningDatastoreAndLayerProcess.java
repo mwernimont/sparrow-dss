@@ -8,7 +8,6 @@ import gov.usgs.cida.sparrow.service.util.ServiceResponseWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.CatalogBuilder;
+import org.geoserver.catalog.DataStoreInfo;
 import org.geoserver.catalog.FeatureTypeInfo;
 import org.geoserver.catalog.LayerInfo;
 import org.geoserver.catalog.NamespaceInfo;
@@ -32,42 +32,39 @@ import org.geoserver.gwc.layer.GeoServerTileLayerInfo;
 import org.geoserver.sparrow.util.GeoServerSparrowLayerSweeper;
 import org.geoserver.sparrow.util.SweepResponse;
 import org.geoserver.wps.gs.GeoServerProcess;
-import org.geotools.data.DataAccess;
+import org.geotools.data.DataStore;
+import org.geotools.data.DataStoreFinder;
+import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
-import org.geotools.util.NullProgressListener;
-import org.opengis.feature.Feature;
-import org.opengis.feature.type.FeatureType;
-import org.opengis.feature.type.Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.geowebcache.filter.parameters.ParameterFilter;
 import org.geowebcache.filter.parameters.RegexParameterFilter;
 import org.geowebcache.filter.parameters.StringParameterFilter;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 		
 /**
- * WPS to add a layer to GeoServer based on an export dbf file from the user's
- * prediction context and a shapefile.
+ * WPS to add a layer to GeoServer based on an export model_ouput from the user's
+ * prediction context as views created in Postgres. The view is exposed as a layer.
  * 
- * This WPS is expecting to shapefiles structured on the server as shown:
- * <pre>
-	|-sparrow_data (this directory is configured in jndi as 'shapefile-directory')
-		|-shapefile
-			|-MRB_1_NHD (this directory passed as 'shapeFilePath' execution arg)
-				|-flowline
-					|-coverage.shp
-					|-coverage.shp.xml
-					|- ... (other files associated w/ the shapefile)
-				|-catchment
-					|-coverage.shp (all shapefiles have the 'coverage' name)
-					|- ... (other files associated w/ the shapefile)
-	|-MRB_2_E2RF1...
- </pre>
+ * 
+ * This WPS has been updated to retrieve two views for each model output run from Postgres.  
+ * Done to remove the dependency on the multi-dbf-datastore (see SPDSSII-28) and war-overlays that prevented geoserver upgrades.
  * 
  * For a single execution, a flowline and catchment layer are registered, each
- * in a separate namespace.
+ * in a separate namespace. 
+ * 
+ * (SPDSSII-28)Examples of the names for the shape files that were once called coverage.shp
+ * where the flow/catch was derived from the parent file name:
+ * sparrow_overlay.mrb02_mrbe2rf1_catch, and sparrow_overlay.mrb02_mrbe2rf1_flow.
+ * 
+ * Workspace names: sparrow-calibration, sparrow-catchment, sparrow-catchment-reusable, sparrow-flowline, sparrow-flowline-reusable 
+ * Stores: Was the same as the layer name. This will change to a single store for Postgres.
+ * Styles: layer name plus catchment or flowline plus default : 22N1220785281-catchment-default; spdssi-28 will need to match to the view/layer name.
+ * Namespace: http://water.usgs.gov/nawqa/sparrow/dss/spatial/sparrow-flowline  
  * 
  * The response is an XML document:
  * <pre>
@@ -87,8 +84,9 @@ import org.geowebcache.filter.parameters.StringParameterFilter;
 public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements SparrowWps, GeoServerProcess {
 	Logger log = LoggerFactory.getLogger(CreateDbfShapefileJoiningDatastoreAndLayerProcess.class);
 	
-	public static String DBASE_SHAPEFILE_JOIN_DATASTORE_NAME = "Dbase Shapefile Joining Data Store";
-	
+	//public static String DBASE_SHAPEFILE_JOIN_DATASTORE_NAME = "Dbase Shapefile Joining Data Store";
+	public static String POSTGRES_SHAPEFILE_JOIN_DATASTORE_NAME = "Postgres View Shapefile Joining Data Store";
+        
 	//Set at construction
 	private Catalog catalog;
 	private GWC gwc;
@@ -116,6 +114,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 	 * @param idFieldInDbf
 	 * @param projectedSrs
 	 * @param defaultStyleName
+         * @param gwcParamFilters
 	 * @param description
 	 * @param overwrite
 	 * @return
@@ -125,8 +124,8 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 	public ServiceResponseWrapper execute(
 			@DescribeParameter(name="layerName", description="The layer name to add, without the workspace name", min = 1) String layerName,
 			@DescribeParameter(name="workspaceName", description="Name of the workspace to use for the style, which must exist.  Null OK to put in the default namespace", min = 0, max = 1) String workspaceName,
-			@DescribeParameter(name="shapeFilePath", description="The complete path on the local machine to a shapefile that the dbf file should be linked to.  Must be parsable into a Java File path.", min = 1) String shapeFilePath,
-			@DescribeParameter(name="dbfFilePath", description="The path to the dbf file", min = 1) String dbfFilePath,
+			@DescribeParameter(name="shapeFilePath", description="NO LONGER NEEDED. The complete path on the local machine to a shapefile that the dbf file should be linked to.  Must be parsable into a Java File path.", min = 1) String shapeFilePath,
+			@DescribeParameter(name="dbfFilePath", description="NO LONGER NEEDED. The path to the dbf file", min = 1) String dbfFilePath,
 			@DescribeParameter(name="idFieldInDbf", description="The name of the ID column in the shapefile (NO LONGER USED - ALWAYS IDENTIFIER)", min = 1) String idFieldInDbf,
 			@DescribeParameter(name="projectedSrs", description="A fully qualified name of an SRS to project to.  If unspecified, EPSG:4326 is used.", min = 0) String projectedSrs,
 			@DescribeParameter(name="defaultStyleName", description="The name of an existing style to use as the default style w/o the workspace designation  The style must exist in the global workspace or the workspace of the layer..", min = 0) String defaultStyleName,
@@ -139,12 +138,12 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		
 		state.layerName = layerName;
 		state.workspaceName = workspaceName;
-		state.shapeFilePath = shapeFilePath;
-		state.dbfFilePath = dbfFilePath;
-		state.idFieldInDbf = idFieldInDbf;
+		state.shapeFilePath = shapeFilePath;  // TODO SPDSSII-28 List past in with the view names created in Postgres
+		state.dbfFilePath = dbfFilePath;  
+		state.idFieldInDbf = idFieldInDbf;  //  TODO SPDSSII-28 select the rows pertaining to this dbf from model_output (dbfId is the model_output_id = n776208324)
 		state.projectedSrs = projectedSrs;
 		state.defaultStyleName = defaultStyleName;
-		state.gwcParamFilters = gwcParamFilters;
+		state.gwcParamFilters = gwcParamFilters; 
 		state.description = description;
 		state.overwrite = overwrite;
 	
@@ -157,7 +156,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		
 		init(state, wrap);
 		
-		log.debug("Request to created a new dbf/shapefile joined DataStore and Layer '{}'",  new Object[] {state.fullLayerName});
+		log.debug("Request to create a new dbf/shapefile joined DataStore and Layer '{}'",  new Object[] {state.fullLayerName});
 		
 		if (! wrap.isOK()) {
 			log.error("DataStore and/or Layer creation failed due to validation error: " + wrap.getMessage());
@@ -168,7 +167,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		try {
 			//Check if the layer exists
 			LayerInfo layer = catalog.getLayerByName(state.fullLayerName);
-
+                        
 			if (layer != null) {
 				wrap.setStatus(ServiceResponseStatus.OK_ALREADY_EXISTS);
 				LayerResponse resp = new LayerResponse();
@@ -223,7 +222,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		if (state.projectedSrs == null) state.projectedSrs = "EPSG:4326";
 		
 		
-		state.workspace = catalog.getWorkspaceByName(state.workspaceName);
+		state.workspace = catalog.getWorkspaceByName(state.workspaceName); 
 		if (state.workspace == null) {
 			wrap.setMessage("The workspace " + state.workspaceName + " does not exist.");
 			wrap.setStatus(ServiceResponseStatus.FAIL);
@@ -240,7 +239,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		
 		//Look for the default style first in the specified workspace, then in the global workspace
 		if (state.defaultStyleName != null) {
-			state.defaultStyle =  catalog.getStyleByName(state.workspaceName, state.defaultStyleName);
+			state.defaultStyle =  catalog.getStyleByName(state.workspaceName, state.defaultStyleName); // postgres change: The styles already exist in global so it may be ok- depends on what global is
 			if (state.defaultStyle == null) {
 				state.defaultStyle =  catalog.getStyleByName(state.defaultStyleName);
 			}
@@ -252,31 +251,9 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 				return;
 			}
 		}
+                state.shapeFile = new File(state.shapeFilePath); // to be removed SPDSSI-28
+		state.dbfFile = new File(state.dbfFilePath); // to be removed SPDSSI-28
 
-		
-		try {
-			state.shapeFile = new File(state.shapeFilePath);
-			if (! state.shapeFile.exists() || ! state.shapeFile.canRead()) {
-				wrap.setMessage("The shapefile " + state.shapeFilePath + " does not exist or cannot be read.");
-				wrap.setStatus(ServiceResponseStatus.FAIL);
-			}
-		} catch (Exception e) {
-			wrap.setMessage("Unable to parse the shapefile path into a valid path on the GeoServer host machine: " + state.shapeFilePath);
-			wrap.setError(e);
-			wrap.setStatus(ServiceResponseStatus.FAIL);
-		}
-		
-		try {
-			state.dbfFile = new File(state.dbfFilePath);
-			if (! state.dbfFile.exists() || ! state.dbfFile.canRead()) {
-				wrap.setMessage("The dbf file " + state.dbfFilePath + " does not exist or cannot be read.");
-				wrap.setStatus(ServiceResponseStatus.FAIL);
-			}
-		} catch (Exception e) {
-			wrap.setMessage("Unable to parse the dbfFilePath into a valid path on the GeoServer host machine: " + state.dbfFilePath);
-			wrap.setError(e);
-			wrap.setStatus(ServiceResponseStatus.FAIL);
-		}
 		
 		if (state.gwcParamFilters != null && state.gwcParamFilters.length > 0) {
 			if (state.gwcParamFilters.length % 4 != 0) {
@@ -333,6 +310,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		}
 	}
 	
+   
 	/**
 	 * Actually creates the layer.
 	 * 
@@ -342,54 +320,80 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 	private void createLayer(UserState state, ServiceResponseWrapper wrap) throws Exception {
 
 		LayerResponse resp = new LayerResponse();
+                DataStoreInfo dsInfo = null;
 		
-		Map<String, Serializable> dsParams = new HashMap<>();
-		dsParams.put("shapefile", state.shapeFile.toURI().toURL());
-		dsParams.put("dbase_file", state.dbfFile.toURI().toURL());
-		dsParams.put("namespace", state.namespace.getURI());
-		dsParams.put("dbase_field", state.idFieldInDbf);
-		dsParams.put("lastUsedMS", System.currentTimeMillis());		// Date for pruning process
-		
-		DataStoreInfoImpl info = new DataStoreInfoImpl(catalog);
-		info.setType(DBASE_SHAPEFILE_JOIN_DATASTORE_NAME);
-		info.setWorkspace(state.workspace);
-		info.setEnabled(true);
-		info.setName(state.layerName);
-		info.setConnectionParameters(dsParams);
-		
-		CatalogBuilder cb = new CatalogBuilder(catalog);
-		catalog.add(info);
-		DataAccess<? extends FeatureType, ? extends Feature> dataStore = info.getDataStore(new NullProgressListener());
-		
-        try {
-			List<Name> names = dataStore.getNames();
-			Name allData = names.get(0);
+                //params for the Postgres datastore 
+                // http://docs.geotools.org/stable/userguide/library/jdbc/datastore.html
+                Map<String, Serializable>map = new HashMap<>();
+                map.put( "dbtype", "postgis");
+                map.put( "jndiReferenceName", "java:comp/env/jdbc/postgres");  //in the tomcat context.xml
+                map.put("namespace", state.namespace.getURI());
+                map.put("schema", "sparrow_overlay");
+                map.put("loose bbox", true);
+                map.put("Expose primary keys", true);
+                map.put("lastUsedMS", System.currentTimeMillis());  // Date for pruning process
+               // map.put(PostgisDataStoreFactory.PREPARED_STATEMENTS, true );
+                try{
+                    DataStore postgis =  DataStoreFinder.getDataStore(map); //Assumes you created it already - the postgres datastore. 
+                    // PostGISDataStore represents the database, while a FeatureSource represents a table in the database
+                    SimpleFeatureType schema = postgis.getSchema(state.layerName); // this is the view
+                    SimpleFeatureSource simSource = postgis.getFeatureSource(state.layerName);
 
-			ProjectionPolicy srsHandling = ProjectionPolicy.FORCE_DECLARED;
-			
-			//Create some cat builder thing for some purpose
-			cb.setWorkspace(info.getWorkspace());
-			cb.setStore(info);
-			FeatureTypeInfo fti = cb.buildFeatureType(dataStore.getFeatureSource(allData));
-			fti.setSRS(state.projectedSrs);
-			fti.setName(state.layerName);
-			fti.setTitle(state.layerName);
-			fti.setDescription(state.description);
-			fti.setAbstract(state.description);
-			fti.setProjectionPolicy(srsHandling);
-			
-			cb.setupBounds(fti);
-			LayerInfo li = cb.buildLayer(fti);
-			if (state.defaultStyle != null) {
-				li.setDefaultStyle(state.defaultStyle);
-			}
-			
-			catalog.add(fti);
-			catalog.add(li);
-			
+                    CatalogBuilder builder = new CatalogBuilder(catalog);
+                    ProjectionPolicy srsHandling2 = ProjectionPolicy.FORCE_DECLARED;
+                    
+                    //check to see if the store exists already and dont recreate the wheel if it does
+                    //the datastore is the DB. The store is the view or table.
+                    dsInfo = catalog.getDataStoreByName(state.workspace, state.layerName); //datastore and layer name are the same
+                    
+                    if (dsInfo == null){  //create a new store for this layer
+                        
+                        DataStoreInfoImpl store = new DataStoreInfoImpl(catalog); //this is so that you can register the new store for a particular layer
+                        store.setType(POSTGRES_SHAPEFILE_JOIN_DATASTORE_NAME);
+                        store.setWorkspace(state.workspace);
+                        store.setEnabled(true);
+                        store.setName(state.layerName);//Sweeper uses this convention. This is just a Name but it will look like it has a store per layer in the ui. postgis.getNames().get(0).toString());//catch_-789789789 or flow_-789789789 for example
+                        log.info("Created new store with name (ie view name):" + schema.getName());
+                        store.setConnectionParameters(map);
+                        //log.info("simSource LOCAL name: " + simSource.getName().getLocalPart());
+                        builder.setStore(dsInfo);
+                        builder.setWorkspace(store.getWorkspace());
+                        log.info("Adding new store to catalog:" + schema.getName());
+                        catalog.add(store);
+                    }
+                    else {
+                        log.info("Data store already exists for " + dsInfo.getName() + " so there's no need to recreate it.");
+                        builder.setStore(dsInfo);
+                        builder.setWorkspace(dsInfo.getWorkspace()); //the workspace will match the workspace of the store
+                    }                   
+
+                    FeatureTypeInfo featureTypeInfo = builder.buildFeatureType(simSource);
+                    // ***
+                    builder.lookupSRS(featureTypeInfo, true);
+                    log.info("About to set up Bounds for layer feature type.");
+                    builder.setupBounds(featureTypeInfo); 
+
+                    // *** set the featureTypeInfo 
+                    featureTypeInfo.setSRS(state.projectedSrs);  
+                    featureTypeInfo.setName(state.layerName);
+                    featureTypeInfo.setTitle(state.layerName); 
+                    featureTypeInfo.setDescription(state.description);//model nbr is mentioned here
+                    featureTypeInfo.setAbstract(state.description);
+                    featureTypeInfo.setProjectionPolicy(srsHandling2);
+
+                    //build the layer and add the style 
+                    LayerInfo layerInfo = builder.buildLayer(featureTypeInfo);
+                    if (state.defaultStyle != null) {
+                        layerInfo.setDefaultStyle(state.defaultStyle);   
+                    }
+                    // add the features etc to the catalog
+                    
+                    catalog.add(featureTypeInfo);  
+                    catalog.add(layerInfo);
+                   
 			//Set tile cache options
 			if (state.parameterFilters.size() > 0) {
-				GeoServerTileLayer tileLayer = gwc.getTileLayer(li);
+				GeoServerTileLayer tileLayer = gwc.getTileLayer(layerInfo);
 				GeoServerTileLayerInfo tileLayerInfo = tileLayer.getInfo();
 				
 				for (ParameterFilter filter : state.parameterFilters) {
@@ -403,14 +407,14 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 			resp.setlayerName(state.fullLayerName);
 			wrap.addEntity(resp);
 			
-        } catch (IOException e) {
+                } catch (IOException e) {
 			
 			//Message and error will be auto-logged from the wrapper
 			wrap.setMessage("Error obtaining new data store");
 			wrap.setError(e);
 			wrap.setStatus(ServiceResponseStatus.FAIL);
 
-            log.debug("Attempting to roll back layer creation changes after error...");
+                    log.debug("Attempting to roll back layer creation changes after error...");
             
             /**
              * Since we dont know exactly when the exception was thrown we will do the full layer removal
@@ -418,13 +422,13 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
              * possible that it wont get to something as a prerequisite for full removal might be what 
              * threw this exception.
              */
-			SweepResponse.DataStoreResponse dsr = GeoServerSparrowLayerSweeper.cascadeDeleteDataStore(catalog, info, state.dbfFile);
+                    log.info("An exception occurred during the creation of the layer that now requires clean-up via the Sweeper. " + state.layerName); //#TODO# SPDSSI-28
+			SweepResponse.DataStoreResponse dsr = GeoServerSparrowLayerSweeper.cascadeDeleteDataStore(catalog, dsInfo); // This appears to attempt to delete whatever it can
 			if(! dsr.isDeleted) {
-				log.error("Unable to fully remove all layer creation changes for datastore [" + info.getName() + "]");
+				log.error("Unable to fully remove all layer creation changes for datastore [" + dsInfo.getName() + "]");
 			}
 			
-        }
-		
+                }
 	}
 	
 	/**
@@ -437,7 +441,7 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		private String workspaceName;
 		private String shapeFilePath;
 		private String dbfFilePath;
-		private String idFieldInDbf;
+		private String idFieldInDbf; // NO LONGER NEEDED (previous change before SPDSSI-28
 		private String projectedSrs;
 		private String defaultStyleName;
 		private String[] gwcParamFilters;
@@ -447,8 +451,8 @@ public class CreateDbfShapefileJoiningDatastoreAndLayerProcess implements Sparro
 		//Self Init based on user params
 		private String fullLayerName;
 		private WorkspaceInfo workspace;
-		private File shapeFile;
-		private File dbfFile;
+		private File shapeFile; // NO LONGER NEEDED- SPDSSI-28
+		private File dbfFile; // NO LONGER NEEDED- SPDSSI-28
 		private NamespaceInfo namespace;
 		private StyleInfo defaultStyle;
 		private List<ParameterFilter> parameterFilters;

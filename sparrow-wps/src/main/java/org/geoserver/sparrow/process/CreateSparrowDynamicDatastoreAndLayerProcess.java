@@ -106,21 +106,6 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		this.jndiTemplate = jndiTemplate;
 		this.createStyleProcess = createStyleProcess;
 		this.createDbfShapefileJoiningDatastoreAndLayerProcess = createDbfShapefileJoiningDatastoreAndLayerProcess;
-		
-		//Check to see if we can access the base shapefile directory
-		try {
-			baseShapefileDir = getBaseShapefileDirectory();
-			getPublicWmsPath();
-		} catch (Exception e) {
-			log.error("Configuration Error.", e);
-			throw e;
-		}
-		
-		if (baseShapefileDir == null || ! baseShapefileDir.exists() || ! baseShapefileDir.canRead()) {
-			log.error("The baseShapefileDir does not exist or cannot be read - see previous error.");
-		}
-	
-	
 	}
 	
 	/**
@@ -179,7 +164,8 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		
 		
 		log.debug("Request for layers for contextId {}. coverageName: {}, dbfFile: {}, projectedSrs: {}, reusable: {}", 
-				new Object[] {state.contextId, state.coverageName, state.dbfFilePath, state.projectedSrs, state.isReusable});
+				new Object[] {state.contextId, state.coverageName, state.projectedSrs, state.isReusable});
+                                //new Object[] {state.contextId, state.coverageName, state.dbfFilePath, state.projectedSrs, state.isReusable});
 		
 		init(state, wrap);
 		
@@ -230,9 +216,9 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		//If not specified, assume its not reusable
 		if (state.isReusable == null) state.isReusable = Boolean.FALSE;
 		
-		//Build complete names
-		state.fullFlowlineLayerName = NamingConventions.getFullFlowlineLayerName(state.modelId, state.contextId, state.isReusable);
-		state.fullCatchmentLayerName = NamingConventions.getFullCatchmentLayerName(state.modelId, state.contextId, state.isReusable);
+		//Build complete names  //SPDSSI-28 may need to have this match the view
+		state.fullFlowlineLayerName = NamingConventions.getPostgresFullFlowlineLayerName(state.contextId, state.isReusable);
+		state.fullCatchmentLayerName = NamingConventions.getPostgresFullCatchmentLayerName(state.contextId, state.isReusable);
 		
 		
 		//Cleanup the SRS
@@ -259,8 +245,8 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 				} else {
 					//Assume we just have the sld params params
 					String url = getLocalServerPath() + "/rest/sld"
-							+ "/workspace/" + NamingConventions.getFlowlineWorkspaceName(true) +
-							"/layer/" + NamingConventions.convertContextIdToXMLSafeName(state.modelId, state.contextId)+
+							+ "/workspace/" + NamingConventions.getPostgresFlowlineWorkspaceName(true) +
+							"/layer/" + NamingConventions.getFlowLayerName(state.contextId) + //convertContextIdToXMLSafeName(state.modelId, state.contextId)+
 							"/reach.sld?" + state.flowlineStyleUrlStr;
 					state.flowlineStyleUrl = new URL(url);
 					state.flowlineStyleUrlStr = state.flowlineStyleUrl.toExternalForm();	//normalize
@@ -281,8 +267,8 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 				} else {
 					//Assume we just have the sld params params
 					String url = getLocalServerPath() + "/rest/sld"
-							+ "/workspace/" + NamingConventions.getCatchmentWorkspaceName(true) +
-							"/layer/" + NamingConventions.convertContextIdToXMLSafeName(state.modelId, state.contextId) +
+							+ "/workspace/" + NamingConventions.getPostgresCatchmentWorkspaceName(true) +
+							"/layer/" + NamingConventions.getCatchLayerName(state.contextId)+//NamingConventions.convertContextIdToXMLSafeName(state.modelId, state.contextId) +
 							"/catch.sld?" + state.catchStyleUrlStr;
 					state.catchStyleUrl = new URL(url);
 					state.catchStyleUrlStr = state.catchStyleUrl.toExternalForm();	//normalize
@@ -297,22 +283,12 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		}
 		
 		//Check the file references
-		state.flowlineShapefile = getFlowlineShapefile(state.coverageName);
+		state.flowlineShapefile = getFlowlineShapefile(state.coverageName); //TODO SPDSSII-28 will no longer need the shapefile
 		
-		if (state.flowlineShapefile == null || ! state.flowlineShapefile.exists() || ! state.flowlineShapefile.canRead()) {
-			wrap.setStatus(ServiceResponseStatus.FAIL);
-			wrap.setMessage("The flowline coverage '" + state.flowlineShapefile.getAbsolutePath() + "' does not exist or cannot be read.");
-			return;
-		}
-		
-		state.catchmentShapefile  = getCatchmentShapefile(state.coverageName);
-		if (state.catchmentShapefile == null || ! state.catchmentShapefile.exists() || ! state.catchmentShapefile.canRead()) {
-			wrap.setStatus(ServiceResponseStatus.FAIL);
-			wrap.setMessage("The catchment coverage '" + state.catchmentShapefile.getAbsolutePath() + "' does not exist or cannot be read.");
-			return;
-		}
+		state.catchmentShapefile  = getCatchmentShapefile(state.coverageName);  //TODO SPDSSII-28 will no longer need the shape file
+
 	}
-	
+        
 	private void createAll(UserState state, ServiceResponseWrapper wrap) throws Exception {
 		
 		//Leave these as null if the layer is non-reusable
@@ -368,13 +344,13 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		}
 		
 		ServiceResponseWrapper flowLayerWrap = createDbfShapefileJoiningDatastoreAndLayerProcess.execute(
-				NamingConventions.convertContextIdToXMLSafeName(state.modelId, state.contextId),
-				NamingConventions.getFlowlineWorkspaceName(state.isReusable),
-				state.flowlineShapefile.getAbsolutePath(),
+				NamingConventions.getFlowLayerName(state.contextId),// was 50N12312312, now flow_123123123
+				NamingConventions.getPostgresFlowlineWorkspaceName(state.isReusable),
+				"/fake/test/path/flowtest.shp",//left for backwards compat. of the WPS. state.flowlineShapefile.getAbsolutePath(), //SPDSSII-28 
 				state.dbfFilePath,
 				JOIN_COLUMN,
 				state.projectedSrs,
-				flowStyleName,
+				flowStyleName, 
 				tileCacheFilters,
 				state.description,
 				state.overwrite);
@@ -385,9 +361,9 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		}
 		
 		ServiceResponseWrapper catchLayerWrap = createDbfShapefileJoiningDatastoreAndLayerProcess.execute(
-				NamingConventions.convertContextIdToXMLSafeName(state.modelId, state.contextId),
-				NamingConventions.getCatchmentWorkspaceName(state.isReusable),
-				state.catchmentShapefile.getAbsolutePath(),
+				NamingConventions.getCatchLayerName(state.contextId),//now catch_123123123. was NamingConventions.convertContextIdToXMLSafeName(state.modelId, state.contextId)
+				NamingConventions.getPostgresCatchmentWorkspaceName(state.isReusable), // workspace
+				"/fake/test/path/catchtest.shp",//left for backwards compat of the wps //SPDSSII-28 this will be the name of the table in postgres
 				state.dbfFilePath,
 				JOIN_COLUMN,
 				state.projectedSrs,
@@ -402,16 +378,16 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		}
 		
 		//Set webcaching properties on these newly added layers
-		
-		
-		
 		SparrowDataLayerResponse resp = new SparrowDataLayerResponse();
+
 		resp.setFlowLayerName(state.fullFlowlineLayerName);
 		if (flowStyleName != null) {
 			//See bug noted above
 			resp.setFlowLayerDefaultStyleName(flowStyleName);
 			//resp.setFlowLayerDefaultStyleName(NamingConventions.getFlowlineWorkspaceName(true) + ":" + flowStyleName);
 		}
+                
+          
 		resp.setCatchLayerName(state.fullCatchmentLayerName);
 		if (catchStyleName != null) {
 			//See bug noted above
@@ -424,84 +400,23 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 	
 	
 	/**
-	 * Returns the flowline shapefile based on the specified coverage name.
+	 * Returns the flowline shapefile table name based on the specified coverage name.
 	 * @param coverageName
 	 * @return
 	 */
-	protected File getFlowlineShapefile(String coverageName) {
-		File coverageDir = new File(baseShapefileDir, coverageName);
-		File shapeFile = new File(coverageDir, "flowline/coverage.shp");
-		
-		return shapeFile;
+        	protected String getFlowlineShapefile(String coverageName) {				
+		return coverageName + "_flow";// SPDSSII- will be the coveragename +"_flow"
 	}
 	
 	/**
-	 * Returns the catchment shapefile based on the specified coverage name.
+	 * Returns the catchment shapefile table name based on the specified coverage name.
 	 * @param coverageName
 	 * @return
 	 */
-	protected File getCatchmentShapefile(String coverageName) {
-		File coverageDir = new File(baseShapefileDir, coverageName);
-		File shapeFile = new File(coverageDir, "catchment/coverage.shp");
-		
-		return shapeFile;
+	protected String getCatchmentShapefile(String coverageName) {		
+		return coverageName + "_catch";// SPDSSII- will be the coveragename +"_catch"
 	}
 	
-	/**
-	 * Finds the configured or default base directory for the base directory containing
-	 * all the shape files for the models.
-	 * 
-	 * The directory must exist or an exception will be thrown.  The configured
-	 * path will be interpreted as relative to the user home (tomcat user) if
-	 * the path is relative or begins with "~/" (nix)or "~\\" (Win).
-	 * Otherwise it will be interpreted as absolute.
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
-	protected synchronized final File getBaseShapefileDirectory() throws Exception {
-		
-		if (baseShapefileDir == null) {
-
-			File shapeFileDir = null;
-
-			try {
-				String shapefileDirPath = (String)jndiTemplate.lookup(JNDI_KEY_FOR_SHAPEFILE_DIRECTORY);
-
-				shapeFileDir = getFileReference(shapefileDirPath);
-
-				if (! (shapeFileDir.exists() && shapeFileDir.canRead())) {
-
-					String msg = "The shapefile location '" + shapefileDirPath + 
-							"' does not exist or is unreadable.";
-					log.error(msg);
-					throw new Exception(msg);
-				} else {
-					log.debug("Using the configured shapefile directory: " + shapeFileDir.getAbsolutePath());
-				}
-			} catch(NamingException exception) {
-				//Try the default location
-
-				shapeFileDir = getFileReference(DEFAULT_SHAPEFILE_DIRECTORY);
-
-				if (! (shapeFileDir.exists() && shapeFileDir.canRead())) {
-
-					String msg = "The configuration parameter 'java:comp/env/shapefile-directory'"
-							+ " is unset and the default location '" + DEFAULT_SHAPEFILE_DIRECTORY + 
-							"' does not exist or is unreadable.";
-
-					log.error(msg);
-					throw new Exception(msg, exception);
-				} else {
-					log.debug("Using the default shapefile directory: " + shapeFileDir.getAbsolutePath());
-				}
-			}
-
-			baseShapefileDir = shapeFileDir;
-		}
-		
-		return baseShapefileDir;
-	}
 	
 	/**
 	 * Interprets a file path, interpreting '~/' and relative paths as relative
@@ -511,7 +426,7 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 	 * @param path
 	 * @return 
 	 */
-	public static File getFileReference(String path) {
+	public static File getFileReference(String path) {// SPDSSII-28 this method wont be needed
 		if (path.startsWith(File.separator)) {
 			//Absolute path
 			return new File(path);
@@ -578,8 +493,8 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		Integer contextId;
 		Integer modelId;
 		String coverageName;
-		String dbfFilePath;
-		String idFieldInDbf;
+		String dbfFilePath;  //left for backward compat. SPDSSI-28
+		String idFieldInDbf; //no longer needed
 		String projectedSrs;
 		Boolean isReusable;
 		String description;
@@ -590,8 +505,8 @@ public class CreateSparrowDynamicDatastoreAndLayerProcess implements SparrowWps,
 		//Self init for each invocation based on user params
 		String fullFlowlineLayerName;	//complete name (workspace:layerName) for the reach layer
 		String fullCatchmentLayerName;	//complete name (workspace:layerName) for the catch layer
-		File flowlineShapefile;
-		File catchmentShapefile;
+		String flowlineShapefile;  // no longer needed. SPDSSII-28 this is now a table in postgres (name of table). It was a File
+		String catchmentShapefile; // no longer needed. SPDSSII-28 this is now a table in postgres (name of table). It was a File
 		URL flowlineStyleUrl;
 		URL catchStyleUrl;
 	}

@@ -2,21 +2,15 @@ package gov.usgswim.sparrow.action;
 
 import gov.usgs.cida.datatable.ColumnData;
 import gov.usgs.cida.datatable.ColumnIndex;
+import static gov.usgswim.sparrow.action.Action.log;
 import gov.usgswim.sparrow.domain.ReachRowValueMap;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import org.geotools.data.shapefile.dbf.DbaseFileHeader;
-import org.geotools.data.shapefile.dbf.DbaseFileWriter;
+import java.util.HashMap;
 
 /**
- * Replaced with GetModelOutputValues as part of the multi dbf replacement with Postgres.
- * NO LONGER NEEDED. To be removed from the code base.
- * Creates a dbf file containing an ID column and a data column.
+ * Creates a hash map of model output values-containing an ID column and a data column, for a given context.
  * 
  * The columns are written in order as follows:
+ * HashMap (ID,Value) where the ID is the key 
  * <ol>
  * <li>[ID Column of named specified] : Integer number of 9* digits.
  * <li>VALUE : Decimal number of 14 digits total, four of which are decimal places.
@@ -30,11 +24,10 @@ import org.geotools.data.shapefile.dbf.DbaseFileWriter;
  * Null and NaN values are OK to write, but NaN will be read back as Null.
  * Null ID are never allowed.
  * 
- * @author eeverman
+ * @author smlarson, eeverman
  *
  */
-@Deprecated
-public class WriteDbfFile extends Action<File> {
+public class GetModelOutputValues extends Action<HashMap> {
 
 	/** Ensures a minimum of 6 digits of precision for all numbers. */
 	private static final int REQUIRED_SIGNIFICANT_DIGITS = 6;
@@ -42,10 +35,8 @@ public class WriteDbfFile extends Action<File> {
 	/** The value column should have at least one decimal place to force the Double data type */
 	private static final int MIN_REQUIRED_DECIMAL_PLACES = 1;
 	
-	private final String idColumnName;
 	private final ColumnIndex columnIndex;
 	private final ColumnData dataColumn;
-	private final File outputFile;
 	private final ReachRowValueMap rowsToInclude;
 	
 	//self init
@@ -61,17 +52,12 @@ public class WriteDbfFile extends Action<File> {
 	 *	Must be convertible to Integers.
 	 * @param dataColumn ColumnData instance containing values for each row.
 	 *	Values must be convertible to Double values.
-	 * @param outputFile A valid file reference to write to.
-	 *	If it exists, it will be overwritten.
-	 * @param idColumnName The name to use for the ID column.
 	 * @param rowsToInclude Optional.  If specified, the row numbers in this map
 	 *	are used to determine what rows to include.
 	 */
-	public WriteDbfFile(ColumnIndex columnIndex, ColumnData dataColumn, File outputFile, String idColumnName, ReachRowValueMap rowsToInclude) {
+	public GetModelOutputValues(ColumnIndex columnIndex, ColumnData dataColumn, ReachRowValueMap rowsToInclude) {
 		this.columnIndex = columnIndex;
 		this.dataColumn = dataColumn;
-		this.outputFile = outputFile;
-		this.idColumnName = idColumnName;
 		this.rowsToInclude = rowsToInclude;
 	}
 
@@ -85,55 +71,26 @@ public class WriteDbfFile extends Action<File> {
 			addValidationError("The column index and data column must have the same number of rows");
 		}
 		
-		if (outputFile == null) {
-			addValidationError("The outputFile cannot be null");
-		} else if (! outputFile.isFile()) {
-			addValidationError("The outputFile must be a file, not a directory");
-		} else if (! outputFile.canWrite()) {
-			addValidationError("The outputFile must be writable");
-		}
 	}
 
 	
 	@Override
-	public File doAction() throws Exception {
-
-		DbaseFileHeader header = new DbaseFileHeader();
-		header.addColumn(idColumnName, 'N', 9, 0);
-		
+	public HashMap doAction() throws Exception {
+                
+                HashMap outputMap = new HashMap();
+                	
 		//Determine the number of digits & decimal places
 		int leftDigits = getRequiredDigitsLeftOfTheDecimal(
 						dataColumn.getMaxDouble(), dataColumn.getMinDouble(), REQUIRED_SIGNIFICANT_DIGITS);
 		int rightDigits = getRequiredDigitsRightOfTheDecimal(
 						leftDigits, REQUIRED_SIGNIFICANT_DIGITS, MIN_REQUIRED_DECIMAL_PLACES);
-		
-		
-		header.addColumn("VALUE", 'N', leftDigits + rightDigits, rightDigits);
-		
-		
+				
 		//Build the max value possible w/ this number of digits
 		maxValueInDbf = getMaxValueforDigits(leftDigits, rightDigits);
 		minValueInDbf = (-1d) * maxValueInDbf;
-
-		
-		if (rowsToInclude == null) {
-			header.setNumRecords(dataColumn.getRowCount());
-		} else {
-			header.setNumRecords(rowsToInclude.size());
-		}
-		
-
-		FileChannel foc = null;
-		FileOutputStream fos = null;
-		DbaseFileWriter dbfWriter = null;
-		try {
-			fos = new FileOutputStream(outputFile, false);
-			foc = fos.getChannel();
-			dbfWriter = new DbaseFileWriter(header, foc, Charset.forName("UTF-8"), null);
-		
-		
+				
 			//Keep reusing the same array for each row
-			Object[] oneRow = new Object[2]; 
+			Object[] oneRow = new Object[2]; // SPDSSII-28 #TODO# write out the dbf file to the postgres model_output table
 
 			for (int row = 0; row < dataColumn.getRowCount(); row++) {
 				
@@ -152,48 +109,34 @@ public class WriteDbfFile extends Action<File> {
 
 						if (val.doubleValue() > maxValueInDbf) {
 							val = maxValueInDbf;
-							log.warn("A + infinity value was writtin to the dbf file to be joined"
-											+ " to a shapefile for mapping, however, the max representable"
+							log.warn("A + infinity value was part of the model output prediction"
+											+ ", however, the max representable"
 											+ " value is " + maxValueInDbf + ", which was used instead.");
 						} else if (val.doubleValue() < minValueInDbf) {
 							val = minValueInDbf;
-							log.warn("A - infinity value was writtin to the dbf file to be joined"
-											+ " to a shapefile for mapping, however, the min representable"
+							log.warn("A - infinity value was part of the model output prediction"
+											+ ", however, the min representable"
 											+ " value is " + minValueInDbf + ", which was used instead.");
 						}
 					}
 
 					//Null and NaN value are OK here, but NaN values are read back as null
-					oneRow[0] = id;
+					oneRow[0] = (int)id.intValue(); 
 					oneRow[1] = val;
 
-					dbfWriter.write(oneRow);
+                                        outputMap.put((int)id.intValue(), val);//this is an int to match the shapefile. See note above.
+                                        //SPDSSII-28 load the hashmap with the values for this model output for insert as rows into model_output later
+                                        
 				} else {
-					//Just leave this value out of the dbf file.
+					//Just leave this value out.
 					//We are mapping a delivery data series and this reach is not
 					//upstream of the target(s)
 				}
 			}
 			
-			log.debug("Wrote " + dataColumn.getRowCount() + " rows to dbf file, " + outputFile.getAbsolutePath());
+                        log.debug("Wrote " + dataColumn.getRowCount() + " rows to hash map. ");
+                        return outputMap;
 
-			return outputFile; 
-		} finally {
-			
-			try {
-				if (dbfWriter != null) {
-					dbfWriter.close();
-				}
-				if (foc != null) {
-					foc.close();
-				}
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException iOException) {
-				//Ignore - failure to close only
-			}
-		}
 	}
 
 	/**
@@ -290,3 +233,4 @@ public class WriteDbfFile extends Action<File> {
 	}
 
 }
+
