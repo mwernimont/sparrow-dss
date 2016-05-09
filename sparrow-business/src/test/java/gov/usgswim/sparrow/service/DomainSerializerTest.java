@@ -30,6 +30,10 @@ public class DomainSerializerTest {
 	PredefinedSessionBuilder psb;
 	
 	public static final long MOCK_MODEL_ID = 42;
+	public static final String MOCK_MODEL_URL = "http://www.usgs.gov/MOCK_MODEL";
+	public static final String MOCK_NETWORK_NAME = "Clever Network Name!";
+	public static final String MOCK_NETWORK_URL = "http://www.usgs.gov/MOCK_NETWORK";
+	
 	public DomainSerializerTest() {
 	}
 
@@ -50,12 +54,12 @@ public class DomainSerializerTest {
 		mb.setArchived(false);
 		mb.setName("CLEVER MODEL NAME");
 		mb.setDescription("Clever model description here");
-		mb.setUrl("http://www.usgs.gov");
+		mb.setUrl(MOCK_MODEL_URL);
 		mb.setDateAdded(new Date());
 		mb.setContactId(12L);
 		mb.setEnhNetworkId(123L);
-		mb.setEnhNetworkName("Clever Network Name!");
-		mb.setEnhNetworkUrl("http://www.usgs.gov");
+		mb.setEnhNetworkName(MOCK_NETWORK_NAME);
+		mb.setEnhNetworkUrl(MOCK_NETWORK_URL);
 		mb.setEnhNetworkIdColumn("clever network id column name");
 		mb.setThemeName("something");
 		mb.setNorthBound(42.0);
@@ -166,4 +170,14 @@ public class DomainSerializerTest {
 		assertFalse("Serialization failed while PredefinedSession topic was set to null", exceptionThrown);
 	}
 	
+	@Test
+	public void testThatNetworkUrlAndIdAreSerialized() {
+		String result = serialize();
+		
+		int idx = result.indexOf(MOCK_NETWORK_NAME);
+		assertNotEquals("network name should be serialized", -1, idx);
+		
+		idx = result.indexOf(MOCK_NETWORK_URL);
+		assertNotEquals("network url should be serialized", -1, idx);
+	}
 }
