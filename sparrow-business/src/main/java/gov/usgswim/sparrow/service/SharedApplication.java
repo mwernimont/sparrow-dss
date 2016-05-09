@@ -66,7 +66,7 @@ public class SharedApplication  {
 	private boolean roLookupFailed = false;
 
 	//Transactional db connection info
-	public static final String READ_WRITE_JNDI_DS_NAME = "java:comp/env/jdbc/sparrow_dss_trans";
+	public static final String READ_WRITE_JNDI_DS_NAME = "java:comp/env/jdbc/sparrow_dss";
 	private DataSource rwDatasource;
 	private boolean rwLookupFailed = false;
 

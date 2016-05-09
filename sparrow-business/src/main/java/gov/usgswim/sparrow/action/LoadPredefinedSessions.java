@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import gov.usgswim.sparrow.domain.PredefinedSessionTopic;
 
 /**
  * Note that the RW connection is used b/c it is likely pointed to a transactional
@@ -96,7 +97,9 @@ public class LoadPredefinedSessions extends Action<List<IPredefinedSession>> {
 			s.setAddNote(rset.getString("ADD_NOTE"));
 			s.setAddContactInfo(rset.getString("ADD_CONTACT_INFO"));
 			s.setGroupName(rset.getString("GROUP_NAME"));
-			
+			String topicStr = rset.getString("TOPIC");
+			PredefinedSessionTopic topic = null == topicStr ? null : PredefinedSessionTopic.valueOf(topicStr);
+			s.setTopic(topic);
 			
 			sessions.add(s.toImmutable());
 		}

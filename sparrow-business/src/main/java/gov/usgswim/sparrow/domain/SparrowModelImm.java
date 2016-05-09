@@ -5,6 +5,7 @@ import gov.usgswim.sparrow.SparrowUnits;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -40,10 +41,10 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	private final SparrowUnits _units;
 	private final List<Source> _sources;
 	private final List<IPredefinedSession> _sessions;
-	private List<String> _states;
-	private List<String> _regions;
-	private boolean _isNational;
-	private int _baseYear;
+	private final List<String> _states;
+	private final List<String> _regions;
+	private final boolean _isNational;
+	private final int _baseYear;
 
 	/*
 	private SparrowModelImm() {
@@ -53,10 +54,11 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 
 	/**
 	 * Constructs an immutable SparrowModel instance.
-	 *
-	 * Note:  To be truly immutable, the Sources in the passed list must be
-	 * immutable - this is the caller's responsibility.  The passed list does
-	 * not need to be immutable b/c the values will be copied out.
+	 * This constructor does not perform deep copies of mutable parameters.
+	 * This constructor is meant to be accessed by factories or builders in
+	 * the same package. Those classes, not this class, bear the 
+	 * responsibility for deep-copying the lists to ensure that an instance
+	 * is truly immutable.
 	 *
 	 * @param id
 	 * @param approved
@@ -77,7 +79,7 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 	 * @param sessions
 	 * @param sources
 	 */
-	public SparrowModelImm(Long id, boolean approved, boolean isPublic, boolean archived,
+	protected SparrowModelImm(Long id, boolean approved, boolean isPublic, boolean archived,
 				String name, String description, String url, Date dateAdded,
 				Long contactId, Long enhNetworkId, String enhNetworkName, String enhNetworkUrl, String enhNetworkIdColumn,
 				String themeName,
@@ -93,7 +95,6 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 		_name = name;
 		_description = description;
 		_url = url;
-		_dateAdded = dateAdded;
 		_contactId = contactId;
 		_enhNetworkId = enhNetworkId;
 		_enhNetworkName = enhNetworkName;
@@ -109,30 +110,11 @@ public class SparrowModelImm implements SparrowModel, Serializable {
 		_units = units;
 		_isNational = isNational;
 		_baseYear = baseYear;
-		
-                if(sessions != null){
-                        _sessions = Collections.unmodifiableList(sessions);
-                } else {
-                        _sessions = Collections.emptyList();
-                }
-		//copy out the sources into an immutable list
-		if (sources != null) {
-			_sources = Collections.unmodifiableList(sources);
-		} else {
-			_sources = Collections.emptyList();
-		}
-		
-		if (states != null) {
-			_states = Collections.unmodifiableList(states);
-		} else {
-			_states = Collections.emptyList();
-		}
-		
-		if (regions != null) {
-			_regions = Collections.unmodifiableList(regions);
-		} else {
-			_regions = Collections.emptyList();
-		}
+		_dateAdded = dateAdded;
+		_sessions = sessions;
+		_sources = sources;
+		_regions = regions;
+		_states = states;
 	}
 
 	public Long getId() {return _id;}

@@ -25,6 +25,17 @@ public class SourceBuilder implements Source, ImmutableBuilder<Source> {
 	
 	public SourceBuilder() {
 	}
+	public SourceBuilder(Source src){
+		_id = src.getId();
+		_identifier = src.getIdentifier();
+		_name = src.getName();
+		_displayName = src.getDisplayName();
+		_description = src.getDescription();
+		_sortOrder = src.getSortOrder();
+		_modelId = src.getModelId();
+		_constituent = src.getConstituent();
+		_units = src.getUnits();
+;	}
 	
 	public SourceBuilder(long id) {
 		_id = id;

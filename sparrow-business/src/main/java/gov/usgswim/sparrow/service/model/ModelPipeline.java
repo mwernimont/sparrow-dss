@@ -12,6 +12,8 @@ public class ModelPipeline extends AbstractPipeline<ModelRequest> {
 		jFormatter.identifyRepeatedTagElement("models", "model");
 		jFormatter.identifyRepeatedTagElement("sources", "source");
 		jFormatter.identifyRepeatedTagElement("sessions", "session");
+		jFormatter.identifyRepeatedTagElement("states", "state");
+		jFormatter.identifyRepeatedTagElement("regions", "region");
 		return jFormatter;
 	}
 

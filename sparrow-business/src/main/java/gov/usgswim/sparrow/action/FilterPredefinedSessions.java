@@ -2,6 +2,7 @@ package gov.usgswim.sparrow.action;
 
 import static gov.usgswim.sparrow.service.ConfiguredCache.PredefinedSessions;
 import gov.usgswim.sparrow.domain.IPredefinedSession;
+import gov.usgswim.sparrow.domain.PredefinedSessionTopic;
 import gov.usgswim.sparrow.request.PredefinedSessionRequest;
 
 import java.util.ArrayList;
@@ -86,9 +87,27 @@ public class FilterPredefinedSessions extends Action<List<IPredefinedSession>> {
 				}
 			}
 		}
+		filterOnTopic(request.getTopic(), filtered);
 
 		return filtered;
 
+	}
+	
+	/**
+	 * 
+	 * @param topic the topic to include
+	 * @param filtered the list that will be modified to include only the parameterized topic
+	 */
+	protected void filterOnTopic(PredefinedSessionTopic topic, List<IPredefinedSession> filtered){
+		if (topic != null) {
+			ListIterator<IPredefinedSession> it = filtered.listIterator();
+			while (it.hasNext()) {
+				IPredefinedSession s = it.next();
+				if (! topic.equals(s.getTopic())) {
+					it.remove();
+				}
+			}
+		}
 	}
 	
 

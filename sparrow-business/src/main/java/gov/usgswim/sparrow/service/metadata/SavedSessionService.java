@@ -15,6 +15,7 @@ import gov.usgswim.sparrow.request.PredefinedSessionUniqueRequest;
 import gov.usgswim.sparrow.service.AbstractSparrowServlet;
 import gov.usgs.cida.sparrow.service.util.ServiceResponseMimeType;
 import gov.usgs.cida.sparrow.service.util.ServiceResponseWrapper;
+import gov.usgswim.sparrow.domain.PredefinedSessionTopic;
 import gov.usgswim.sparrow.service.ServletResponseParser;
 import gov.usgswim.sparrow.service.SharedApplication;
 
@@ -206,8 +207,8 @@ public class SavedSessionService extends AbstractSparrowServlet {
 		Boolean approved = getBoolean(params, "approved");
 		PredefinedSessionType type = parsePredefinedSessionType(params, "type");
 		String groupName = getClean(params, "groupName");
-		
-		req = new PredefinedSessionRequest(modelId, approved, type, groupName);
+		PredefinedSessionTopic topic = parsePredefinedSessionTopic(params, "topic");
+		req = new PredefinedSessionRequest(modelId, approved, type, groupName, topic);
 
 		return req;
 	}
@@ -239,6 +240,17 @@ public class SavedSessionService extends AbstractSparrowServlet {
 			//OK if not specified
 		}
 		return type;
+	}
+	
+	private static PredefinedSessionTopic parsePredefinedSessionTopic(Map params, String key) {
+		PredefinedSessionTopic topic = null;
+		try {
+			String t = getClean(params, key);
+			topic = PredefinedSessionTopic.valueOf(t);
+		} catch (Exception e) {
+			//OK if not specified
+		}
+		return topic;
 	}
 	
 }

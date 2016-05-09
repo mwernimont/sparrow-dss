@@ -155,10 +155,10 @@
 		</profile>
 		
 		<profile>
-			<id>sonar-build</id>
+			<id>sonar_build</id>
 			<activation>
 				<property>
-					<name>sonar-build</name>
+					<name>sonar_build</name>
 					<value>true</value>
 				</property>
 			</activation>
@@ -360,6 +360,11 @@
 					<groupId>net.sf.alchim</groupId>
 					<artifactId>yuicompressor-maven-plugin</artifactId>
 					<version>0.7.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.0.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
