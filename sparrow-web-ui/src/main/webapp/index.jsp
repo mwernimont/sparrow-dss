@@ -61,12 +61,12 @@
 						<dd>{{baseYear}}</dd>
 						{{/if}}
 
-						{{#if networkUrl.length}}
+						{{#if enhNetworkUrl.length}}
 						<dt>Stream Network:</dt>
 						<dd><a href="{{networkUrl}}" title=
-						"The network model and associated geometry the model is based on">{{networkName}}</a><br />
+						"The network model and associated geometry the model is based on">{{enhNetworkName}}</a><br />
 							<i>Geometry and additional reach and network attribute data are available with
-								the stream network data, which is available as a separate download.</i>\n\
+								the stream network data, which is available as a separate download.</i>
 						</dd>
 						{{/if}}
 							

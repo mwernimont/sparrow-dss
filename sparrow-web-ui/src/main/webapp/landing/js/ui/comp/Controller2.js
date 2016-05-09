@@ -44,20 +44,27 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		this.region = config.region;
 		this.parameter = config.parameter;
 		this.models = config.models;
+		
+		/**
+		 * 
+		 * @param {Object} model
+		 * @param {String} placeOfInterest a lower-cased state or region
+		 * @return {Boolean}
+		 */
 		var containsInterestingPlace = function(model, placeOfInterest){
 			var isInteresting = false;
-			if(model.isNational){
+			if(model.spatialMembership.national){
 				isInteresting = true;
 			} else {
-				if (model.states){
-					var interestingStates = model.states.filter(function(state){
+				if (model.spatialMembership.states){
+					var interestingStates = model.spatialMembership.states.state.filter(function(state){
 						return state.toLowerCase() === placeOfInterest;
 					});
 					isInteresting = interestingStates.length > 0;
 				}
 				//can skip if model's states are already interesting
-				if (!isInteresting && model.regions){
-					var interestingRegions = model.regions.filter(function(region){
+				if (!isInteresting && model.spatialMembership.regions){
+					var interestingRegions = model.spatialMembership.regions.region.filter(function(region){
 						return region.toLowerCase() === placeOfInterest;
 					});
 					isInteresting = interestingRegions.length > 0;
@@ -66,6 +73,13 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			
 			return isInteresting;
 		};
+		
+		/**
+		 * 
+		 * @param {String} placeOfInterest - either a region, a state, or 'any'
+		 * @param {type} parameterOfInterest - a parameter (a.k.a constituent)
+		 * @return {Array}
+		 */
 		this.getRelevantModels = function(placeOfInterest, parameterOfInterest){
 			parameterOfInterest = parameterOfInterest.toLowerCase();
 			placeOfInterest = placeOfInterest.toLowerCase();
@@ -108,7 +122,7 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			this.selectValue('constituent-combo-input', param);
 			
 			var relevantModels = this.getRelevantModels(region, param);
-			var output = Sparrow.index.ModelTemplater.listOfModels(relevantModels);
+			var output = Sparrow.index.ModelTemplater.listOfModels({models:relevantModels});
 			
 			this.updateModelList(output);
 		}, this);
@@ -119,11 +133,38 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 				var model = this.models.filter(function(model){
 					return model['@id'] === modelId;
 				})[0];
+				
+				
+				model.sessions.watershedSessions = this.getTopicFilteredSessionsFromModel(model, 'watershed');
+				model.sessions.scenarioSessions = this.getTopicFilteredSessionsFromModel(model, 'scenario');
 				var htmlOutput = Sparrow.index.ModelTemplater.modelDetails(model);
 				
 				this.updateModelDisplay(htmlOutput, true);
 			}
 
+		};
+		
+		/**
+		 * Simple filter function that performs null-checks and selects
+		 * the parameterized topic
+		 * 
+		 * @param {Object} model
+		 * @param {String} topicToKeep. Must be lower-cased.
+		 * @return {Array<Object>}
+		 */
+		this.getTopicFilteredSessionsFromModel = function(model, topicToKeep){
+			if(model.sessions && model.sessions.session && model.sessions.session.length){
+				return model.sessions.session.filter(function(session){
+					var topic = session["@topic"];
+					if(topic && topic.length){
+						return topic.toLowerCase() === topicToKeep;
+					} else {
+						return false;
+					}
+				});
+			} else {
+				return [];
+			}
 		};
 		
 		this.on(this.METADATA_KEY, this.displayModelDetails, this);
