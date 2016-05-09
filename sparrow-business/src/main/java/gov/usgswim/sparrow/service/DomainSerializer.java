@@ -127,19 +127,24 @@ public class DomainSerializer extends BasicXMLStreamReader {
 							outputEmptySessionsForHeaders();
 							isSessionFirstRowOutput = true;
 						}
-						events.add(new BasicTagEvent("session", null)
+						
+						BasicTagEvent tagEvent = new BasicTagEvent("session", null)
 							.addAttribute("key", session.getUniqueCode())
 							.addAttribute("name", session.getName())
 							.addAttribute("description", session.getDescription())
 							.addAttribute("group_name", session.getGroupName())
-							.addAttribute("topic", session.getTopic().name())
 							.addAttribute("type", session.getPredefinedSessionType().name())
 							.addAttribute("approved", session.getApproved()?"T":"F")
 							.addAttribute("sort_order", Integer.toString(session.getSortOrder()))
 							.addAttribute("add_by", session.getAddBy())
 							.addAttribute("add_date", session.getAddDate().toString())
-							.addAttribute("add_note", session.getAddNote())
-						);
+							.addAttribute("add_note", session.getAddNote());
+							
+							if(null != session.getTopic()){
+								tagEvent.addAttribute("topic", session.getTopic().name());
+							}
+							
+						events.add(tagEvent);
 					}
 				}
 				addCloseTag("sessions");
