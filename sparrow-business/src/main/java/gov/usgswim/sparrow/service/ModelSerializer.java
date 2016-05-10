@@ -2,6 +2,7 @@ package gov.usgswim.sparrow.service;
 
 import static gov.usgswim.sparrow.service.AbstractSerializer.XMLSCHEMA_NAMESPACE;
 import static gov.usgswim.sparrow.service.AbstractSerializer.XMLSCHEMA_PREFIX;
+import static gov.usgswim.sparrow.service.ModelSerializerConstants.*;
 import gov.usgs.webservices.framework.dataaccess.BasicTagEvent;
 import gov.usgs.webservices.framework.dataaccess.BasicXMLStreamReader;
 import gov.usgswim.sparrow.domain.IPredefinedSession;
@@ -18,8 +19,7 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 public class ModelSerializer extends BasicXMLStreamReader {
-	public static String TARGET_NAMESPACE = "http://www.usgs.gov/sparrow/meta_response/v0_1";
-	public static String TARGET_NAMESPACE_LOCATION = "http://www.usgs.gov/sparrow/meta_response.xsd";
+	
 
 	private List<SparrowModel> models;
 	private Iterator<SparrowModel> mIter;
@@ -64,7 +64,7 @@ public class ModelSerializer extends BasicXMLStreamReader {
 		events.add(new BasicTagEvent(START_DOCUMENT));
 		// TODO need to add encoding and version xw.add( evtFact.createStartDocument(ENCODING, XML_VERSION) );
 
-		events.add(new BasicTagEvent(START_ELEMENT, "models")
+		events.add(new BasicTagEvent(START_ELEMENT, MODELS)
 			.addAttribute(XMLSCHEMA_PREFIX, XMLSCHEMA_NAMESPACE, "schemaLocation", TARGET_NAMESPACE + " " + TARGET_NAMESPACE_LOCATION));
 
 		mIter = models.iterator();
@@ -75,54 +75,54 @@ public class ModelSerializer extends BasicXMLStreamReader {
 	private void readModel() {
 		if (mIter.hasNext()) {
 			SparrowModel model = mIter.next();
-			events.add(new BasicTagEvent(START_ELEMENT, "model").addAttribute("id", model.getId().toString()));
+			events.add(new BasicTagEvent(START_ELEMENT, MODEL).addAttribute(MODEL_ID_ATTRIBUTE, model.getId().toString()));
 			{
-                addOpenTag("status");
+                addOpenTag(STATUS);
                 {
-                    addNonNullBasicTag("approved", Boolean.toString(model.isApproved()));
-                    addNonNullBasicTag("public", Boolean.toString(model.isPublic()));
-                    addNonNullBasicTag("archived", Boolean.toString(model.isArchived()));
+                    addNonNullBasicTag(MODEL_APPROVED, Boolean.toString(model.isApproved()));
+                    addNonNullBasicTag(MODEL_PUBLIC, Boolean.toString(model.isPublic()));
+                    addNonNullBasicTag(MODEL_ARCHIVED, Boolean.toString(model.isArchived()));
                 }
-                addCloseTag("status");
-				addNonNullBasicTag("name", model.getName());
-				addNonNullBasicTag("alias", SparrowResourceUtils.lookupModelName(model.getId().toString()));
-				addNonNullBasicTag("description", StringUtils.trimToNull(model.getDescription()));
-				addNonNullBasicTag("url", StringUtils.trimToNull(model.getUrl()));
-				addNonNullBasicTag("dateAdded", DateFormatUtils.ISO_DATE_FORMAT.format(model.getDateAdded()));
-				addNonNullBasicTag("contactId", model.getContactId().toString());
-				addNonNullBasicTag("enhNetworkId", model.getEnhNetworkId().toString());
-				addNonNullBasicTag("enhNetworkName", model.getEnhNetworkName());
-				addNonNullBasicTag("enhNetworkUrl", model.getEnhNetworkUrl());
-				addNonNullBasicTag("themeName", model.getThemeName());
-				addNonNullBasicTag("constituent", model.getConstituent());
-				addNonNullBasicTag("units", model.getUnits().getUserName());
-				addNonNullBasicTag("baseYear", Integer.toString(model.getBaseYear()));
-				addOpenTag("spatialMembership");
+                addCloseTag(STATUS);
+				addNonNullBasicTag(MODEL_NAME, model.getName());
+				addNonNullBasicTag(ALIAS, SparrowResourceUtils.lookupModelName(model.getId().toString()));
+				addNonNullBasicTag(MODEL_DESCRIPTION, StringUtils.trimToNull(model.getDescription()));
+				addNonNullBasicTag(MODEL_URL, StringUtils.trimToNull(model.getUrl()));
+				addNonNullBasicTag(DATE_ADDED, DateFormatUtils.ISO_DATE_FORMAT.format(model.getDateAdded()));
+				addNonNullBasicTag(CONTACT_ID, model.getContactId().toString());
+				addNonNullBasicTag(ENH_NETWORK_ID, model.getEnhNetworkId().toString());
+				addNonNullBasicTag(ENH_NETWORK_NAME, model.getEnhNetworkName());
+				addNonNullBasicTag(ENH_NETWORK_URL, model.getEnhNetworkUrl());
+				addNonNullBasicTag(THEME_NAME, model.getThemeName());
+				addNonNullBasicTag(MODEL_CONSTITUENT, model.getConstituent());
+				addNonNullBasicTag(MODEL_UNITS, model.getUnits().getUserName());
+				addNonNullBasicTag(BASE_YEAR, Integer.toString(model.getBaseYear()));
+				addOpenTag(SPATIAL_MEMBERSHIP);
 					if(model.isNational()) {
 						//If model is national then it pertains to all states and regions. 
 						//Declare model as national. Do not enumerate other memberships.
-						addNonNullBasicTag("national", Boolean.toString(model.isNational()));
+						addNonNullBasicTag(NATIONAL, Boolean.toString(model.isNational()));
 					} else {
 						//model is not national, so the subset of pertinent states and regions
 						//must be enumerated
-						addOpenTag("states");
+						addOpenTag(STATES);
 							for(String state : model.getStates()){
-								addNonNullBasicTag("state", state);
+								addNonNullBasicTag(STATE, state);
 							}
-						addCloseTag("states");
-						addOpenTag("regions");
+						addCloseTag(STATES);
+						addOpenTag(REGIONS);
 							for(String region : model.getRegions()){
-								addNonNullBasicTag("region", region);
+								addNonNullBasicTag(REGION, region);
 							}
-						addCloseTag("regions");
+						addCloseTag(REGIONS);
 					}
-				addCloseTag("spatialMembership");
-				events.add(new BasicTagEvent("bounds", null)
-					.addAttribute("north", model.getNorthBound().toString())
-					.addAttribute("west", model.getWestBound().toString())
-					.addAttribute("south", model.getSouthBound().toString())
-					.addAttribute("east", model.getEastBound().toString()));
-				addOpenTag("sessions");
+				addCloseTag(SPATIAL_MEMBERSHIP);
+				events.add(new BasicTagEvent(BOUNDS, null)
+					.addAttribute(NORTH_BOUNDS_ATTRIBUTE, model.getNorthBound().toString())
+					.addAttribute(WEST_BOUNDS_ATTRIBUTE, model.getWestBound().toString())
+					.addAttribute(SOUTH_BOUNDS_ATTRIBUTE, model.getSouthBound().toString())
+					.addAttribute(EAST_BOUNDS_ATTRIBUTE, model.getEastBound().toString()));
+				addOpenTag(SESSIONS);
 				{
 					for ( IPredefinedSession session: model.getSessions()) {
 						if (isOutputCompleteFirstRow && !isSessionFirstRowOutput) {
@@ -130,27 +130,27 @@ public class ModelSerializer extends BasicXMLStreamReader {
 							isSessionFirstRowOutput = true;
 						}
 						
-						BasicTagEvent tagEvent = new BasicTagEvent("session", null)
-							.addAttribute("key", session.getUniqueCode())
-							.addAttribute("name", session.getName())
-							.addAttribute("description", session.getDescription())
-							.addAttribute("group_name", session.getGroupName())
-							.addAttribute("type", session.getPredefinedSessionType().name())
-							.addAttribute("approved", session.getApproved()?"T":"F")
-							.addAttribute("sort_order", Integer.toString(session.getSortOrder()))
-							.addAttribute("add_by", session.getAddBy())
-							.addAttribute("add_date", session.getAddDate().toString())
-							.addAttribute("add_note", session.getAddNote());
+						BasicTagEvent tagEvent = new BasicTagEvent(SESSION, null)
+							.addAttribute(SESSION_KEY, session.getUniqueCode())
+							.addAttribute(SESSION_NAME, session.getName())
+							.addAttribute(SESSION_DESCRIPTION, session.getDescription())
+							.addAttribute(SESSION_GROUP_NAME, session.getGroupName())
+							.addAttribute(SESSION_TYPE, session.getPredefinedSessionType().name())
+							.addAttribute(SESSION_APPROVED, session.getApproved()?"T":"F")
+							.addAttribute(SESSION_SORT_ORDER, Integer.toString(session.getSortOrder()))
+							.addAttribute(SESSION_ADD_BY, session.getAddBy())
+							.addAttribute(SESSION_ADD_DATE, session.getAddDate().toString())
+							.addAttribute(SESSION_ADD_NOTE, session.getAddNote());
 							
 							if(null != session.getTopic()){
-								tagEvent.addAttribute("topic", session.getTopic().name());
+								tagEvent.addAttribute(SESSION_TOPIC, session.getTopic().name());
 							}
 							
 						events.add(tagEvent);
 					}
 				}
-				addCloseTag("sessions");
-				addOpenTag("sources");
+				addCloseTag(SESSIONS);
+				addOpenTag(SOURCES);
 				{
 					for (Source src : model.getSources()) {
 						if (isOutputCompleteFirstRow && !isSourcesFirstRowOutput) {
@@ -158,59 +158,60 @@ public class ModelSerializer extends BasicXMLStreamReader {
 							isSourcesFirstRowOutput = true;
 							isOutputCompleteFirstRow = false; // Not sure if this is proper. Must rethink;
 						}
-						events.add(new BasicTagEvent(START_ELEMENT, "source")
-							.addAttribute("id", src.getId().toString())
-							.addAttribute("identifier", Integer.toString(src.getIdentifier()))
-							.addAttribute("sortOrder", Integer.toString(src.getSortOrder()))
+						events.add(new BasicTagEvent(START_ELEMENT, SOURCE)
+							.addAttribute(SOURCE_ID, src.getId().toString())
+							.addAttribute(SOURCE_IDENTIFIER, Integer.toString(src.getIdentifier()))
+							.addAttribute(SOURCE_SORT_ORDER, Integer.toString(src.getSortOrder()))
 						);
 						{
-							addNonNullBasicTag("name", src.getName());
-							addNonNullBasicTag("displayName", src.getDisplayName());
-							addNonNullBasicTag("description",StringUtils.trimToNull(src.getDescription()));
-							addNonNullBasicTag("constituent", src.getConstituent());
-							addNonNullBasicTag("units", src.getUnits().toString());
+							addNonNullBasicTag(SOURCE_NAME, src.getName());
+							addNonNullBasicTag(SOURCE_DISPLAY_NAME, src.getDisplayName());
+							addNonNullBasicTag(SOURCE_DESCRIPTION,StringUtils.trimToNull(src.getDescription()));
+							addNonNullBasicTag(SOURCE_CONSTITUENT, src.getConstituent());
+							addNonNullBasicTag(SOURCE_UNITS, src.getUnits().toString());
 						}
-						addCloseTag("source");
+						addCloseTag(SOURCE);
 						// add a carriage return to break up long text line
 						events.add(new BasicTagEvent(SPACE));
 					}
 				}
-				addCloseTag("sources");
+				addCloseTag(SOURCES);
 			}
-			addCloseTag("model");
+			addCloseTag(MODEL);
 		} else {
 			isDataDone = true;
 		}
 	}
 
+
 	@Override
 	protected void documentEndAction() {
 		super.documentEndAction();
-		addCloseTag("models");
+		addCloseTag(MODELS);
 		events.add(new BasicTagEvent(END_DOCUMENT));
 	}
 
 
 	private void outputEmptySourceForHeaders() {
-		events.add(new BasicTagEvent(START_ELEMENT, "source")
-				.addAttribute("id", "")
-				.addAttribute("identifier", "")
-				.addAttribute("sortOrder", ""));
+		events.add(new BasicTagEvent(START_ELEMENT, SOURCE)
+				.addAttribute(SOURCE_ID, "")
+				.addAttribute(SOURCE_IDENTIFIER, "")
+				.addAttribute(SOURCE_SORT_ORDER, ""));
 		{
-			addNonNullBasicTag("name", "");
-			addNonNullBasicTag("displayName", "");
-			addNonNullBasicTag("description", "");
-			addNonNullBasicTag("constituent", "");
-			addNonNullBasicTag("units", "");
+			addNonNullBasicTag(SOURCE_NAME, "");
+			addNonNullBasicTag(SOURCE_DISPLAY_NAME, "");
+			addNonNullBasicTag(SOURCE_DESCRIPTION, "");
+			addNonNullBasicTag(SOURCE_CONSTITUENT, "");
+			addNonNullBasicTag(SOURCE_UNITS, "");
 		}
-		addCloseTag("source");
+		addCloseTag(SOURCE);
 		// isOutputCompleteFirstRow = false; [IK] This side effect is bad and should be no longer needed.
 	}
 
 	private void outputEmptySessionsForHeaders() {
-		events.add(new BasicTagEvent(START_ELEMENT, "session")
-				.addAttribute("key", ""));
-		addCloseTag("session");
+		events.add(new BasicTagEvent(START_ELEMENT, SESSION)
+				.addAttribute(SESSION_KEY, ""));
+		addCloseTag(SESSION);
 	}
 
 	public void setOutputCompleteFirstRow() {
