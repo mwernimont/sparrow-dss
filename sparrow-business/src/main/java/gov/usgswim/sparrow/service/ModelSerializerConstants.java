@@ -1,5 +1,8 @@
 package gov.usgswim.sparrow.service;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.FastDateFormat;
+
 
 public class ModelSerializerConstants {
 	public static final String TARGET_NAMESPACE = "http://www.usgs.gov/sparrow/meta_response/v0_1";
@@ -58,4 +61,5 @@ public class ModelSerializerConstants {
 	public static final String MODEL_DESCRIPTION = "description";
 	public static final String ALIAS = "alias";
 	public static final String MODEL_NAME = "name";
+	public static final FastDateFormat DATE_FORMAT = DateFormatUtils.ISO_DATE_FORMAT;
 }

@@ -23,7 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class DomainSerializerTest {
+public class ModelSerializerTest {
 	ModelSerializer instance;
 	SparrowModelBuilder mb;
 	SourceBuilder srcb;
@@ -34,7 +34,7 @@ public class DomainSerializerTest {
 	public static final String MOCK_NETWORK_NAME = "Clever Network Name!";
 	public static final String MOCK_NETWORK_URL = "http://www.usgs.gov/MOCK_NETWORK";
 	
-	public DomainSerializerTest() {
+	public ModelSerializerTest() {
 	}
 
 	@BeforeClass

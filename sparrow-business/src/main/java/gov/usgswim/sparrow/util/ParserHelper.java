@@ -27,6 +27,22 @@ public abstract class ParserHelper {
 
 		return elementValue;
 	}
+	
+	public static int parseSimpleElementInt(XMLStreamReader in) throws XMLStreamException {
+		return Integer.parseInt(parseSimpleElementValue(in));
+	}
+	
+	public static boolean parseSimpleElementBool(XMLStreamReader in) throws XMLStreamException {
+		return Boolean.parseBoolean(parseSimpleElementValue(in));
+	}
+	
+	public static double parseSimpleElementDouble(XMLStreamReader in) throws XMLStreamException {
+		return Double.parseDouble(parseSimpleElementValue(in));
+	}
+	
+	public static long parseSimpleElementLong(XMLStreamReader in) throws XMLStreamException {
+		return Long.parseLong(parseSimpleElementValue(in));
+	}
 
 	/**
 	 * Ignores the current tag element by consuming the stream until the corresponding end tag.

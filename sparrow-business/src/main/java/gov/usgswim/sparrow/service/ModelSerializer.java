@@ -88,7 +88,7 @@ public class ModelSerializer extends BasicXMLStreamReader {
 				addNonNullBasicTag(ALIAS, SparrowResourceUtils.lookupModelName(model.getId().toString()));
 				addNonNullBasicTag(MODEL_DESCRIPTION, StringUtils.trimToNull(model.getDescription()));
 				addNonNullBasicTag(MODEL_URL, StringUtils.trimToNull(model.getUrl()));
-				addNonNullBasicTag(DATE_ADDED, DateFormatUtils.ISO_DATE_FORMAT.format(model.getDateAdded()));
+				addNonNullBasicTag(DATE_ADDED, DATE_FORMAT.format(model.getDateAdded()));
 				addNonNullBasicTag(CONTACT_ID, model.getContactId().toString());
 				addNonNullBasicTag(ENH_NETWORK_ID, model.getEnhNetworkId().toString());
 				addNonNullBasicTag(ENH_NETWORK_NAME, model.getEnhNetworkName());
