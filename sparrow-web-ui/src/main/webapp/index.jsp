@@ -54,11 +54,11 @@
 				<div id="sparrow-keywords-section">
 					<dl class="sparrow-keywords">
 						<dt>Modeled Constituent:</dt>
-						<dd>{{constituent}}</dd>
+						<dd>{{constituent}}&nbsp;</dd>
 
 						{{#if baseYear}}
 						<dt>Base Year:</dt>
-						<dd>{{baseYear}}</dd>
+						<dd>{{baseYear}}&nbsp;</dd>
 						{{/if}}
 
 						{{#if enhNetworkUrl.length}}
@@ -77,7 +77,7 @@
 						<dt>Reference:</dt>
 
 						<dd><a href="{{url}}" title=
-						"The model publication">{{description}}</a></dd>
+						"The model publication">{{description}}&nbsp;</a></dd>
 
 						<dt>Model Updates:</dt>
 
