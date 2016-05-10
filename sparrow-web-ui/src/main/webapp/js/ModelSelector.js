@@ -1,4 +1,4 @@
-function loadModels(nonpublic, nonapproved, archived, callback){
+function loadModels(public, approved, archived, callback){
 	    var xmlreq = ''
         + '<?xml version="1.0" encoding="ISO-8859-1" ?>'
         + '<sparrow-meta-request '
@@ -7,8 +7,8 @@ function loadModels(nonpublic, nonapproved, archived, callback){
         + '  <model public="$public$" archived="$archived$" approved="$approved$" />'
         + '</sparrow-meta-request>'
         ;
-    xmlreq = xmlreq.replace("$public$", !nonpublic);
-    xmlreq = xmlreq.replace("$approved$", !nonapproved);
+    xmlreq = xmlreq.replace("$public$", public);
+    xmlreq = xmlreq.replace("$approved$", approved);
     xmlreq = xmlreq.replace("$archived$", archived);
     
     

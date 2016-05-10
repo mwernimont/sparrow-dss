@@ -86,17 +86,17 @@
 		}
 		
 		Ext.onReady(function(){
-			var nonpublic = false;
-			var nonapproved = false;
+			var public = true;
+			var approved = true;
 			var archived = false;
 
 			if (document.getElementById('model-controls-area')) {
-				nonpublic = document.getElementById('model-controls-show-nonpublic').checked;
-				nonapproved = document.getElementById('model-controls-show-nonapproved').checked;
+				public = !document.getElementById('model-controls-show-nonpublic').checked;
+				approved = !document.getElementById('model-controls-show-nonapproved').checked;
 				archived = document.getElementById('model-controls-show-archived').checked
 			}
 			
-			loadModels(nonpublic, nonapproved, archived, renderModelList);
+			loadModels(public, approved, archived, renderModelList);
 		});
 		Ext.onReady(updateCoreVersion);
 	 </script>

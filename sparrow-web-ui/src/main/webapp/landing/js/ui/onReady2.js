@@ -4,7 +4,7 @@ Ext.onReady(function() {
 	//A requirement of using Ext.History
 	Ext.History.init();
 	
-	loadModels(false, false, false, function(response, request){
+	loadModels(true, true, false, function(response, request){
 		var models = Ext.util.JSON.decode(response.responseText);
 		CONTROLLER = new Sparrow.index.Controller({region : 'Any', parameter : 'Any', models: models.models.model});
 		CONTROLLER.readStateFromHistory();

@@ -64,7 +64,7 @@
 		    }
 		};
 		Ext.onReady(function(){
-			loadModels(false, false, false, renderModelList);
+			loadModels(true, true, false, renderModelList);
 		});
 	}());
 	</script>
