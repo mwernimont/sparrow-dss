@@ -5,7 +5,7 @@ import gov.usgswim.ThreadSafe;
 import gov.usgswim.service.HttpService;
 import gov.usgswim.service.pipeline.PipelineRequest;
 import gov.usgswim.sparrow.domain.SparrowModel;
-import gov.usgswim.sparrow.service.DomainSerializer;
+import gov.usgswim.sparrow.service.ModelSerializer;
 import gov.usgswim.sparrow.service.SharedApplication;
 import gov.usgswim.sparrow.util.SparrowResourceUtils;
 
@@ -70,7 +70,7 @@ public class ModelService implements HttpService<ModelRequest> {
 			return reader;
 		}
 
-		DomainSerializer serializer = new DomainSerializer(models);
+		ModelSerializer serializer = new ModelSerializer(models);
 		if (needsCompleteFirstRow) {
 			serializer.setOutputCompleteFirstRow();
 		}

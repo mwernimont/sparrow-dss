@@ -24,7 +24,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class DomainSerializerTest {
-	DomainSerializer instance;
+	ModelSerializer instance;
 	SparrowModelBuilder mb;
 	SourceBuilder srcb;
 	PredefinedSessionBuilder psb;
@@ -118,7 +118,7 @@ public class DomainSerializerTest {
 			psb.toImmutable()
 		}));
 		models.add(mb.toImmutable());
-		instance = new DomainSerializer(models);
+		instance = new ModelSerializer(models);
 		
 		IFormatter formatter = new XMLPassThroughFormatter();
 		Writer writer = new StringWriter();

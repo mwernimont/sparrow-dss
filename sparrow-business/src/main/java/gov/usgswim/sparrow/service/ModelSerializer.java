@@ -17,7 +17,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-public class DomainSerializer extends BasicXMLStreamReader {
+public class ModelSerializer extends BasicXMLStreamReader {
 	public static String TARGET_NAMESPACE = "http://www.usgs.gov/sparrow/meta_response/v0_1";
 	public static String TARGET_NAMESPACE_LOCATION = "http://www.usgs.gov/sparrow/meta_response.xsd";
 
@@ -27,7 +27,7 @@ public class DomainSerializer extends BasicXMLStreamReader {
 	private boolean isSessionFirstRowOutput;
 	private boolean isSourcesFirstRowOutput;
 
-	public DomainSerializer(List<SparrowModel> models) {
+	public ModelSerializer(List<SparrowModel> models) {
 		this.models = models;
 	}
 
