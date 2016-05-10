@@ -18,7 +18,7 @@ public class ModelPipeline extends AbstractPipeline<ModelRequest> {
 	}
 
 	public ModelPipeline(){
-		super(new ModelService(), new ModelParser());
+		super(new ModelService(), new ModelRequestParser());
 	}
 
 	@Override

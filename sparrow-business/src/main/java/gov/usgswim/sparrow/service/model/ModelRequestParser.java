@@ -7,11 +7,11 @@ import gov.usgswim.sparrow.parser.ResponseFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.stream.XMLStreamReader;
 
-public class ModelParser 
+public class ModelRequestParser 
 	extends AbstractHttpRequestParser<ModelRequest> 
 	implements RequestParser<ModelRequest> {
 
-	public ModelParser() {
+	public ModelRequestParser() {
 	}
 	
 	public ModelRequest parse(XMLStreamReader reader) throws Exception {
