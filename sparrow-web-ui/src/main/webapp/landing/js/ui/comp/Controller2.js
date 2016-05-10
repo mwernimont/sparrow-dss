@@ -134,7 +134,9 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 					return model['@id'] === modelId;
 				})[0];
 				
-				
+				if(!model.sessions) {
+					model.sessions = {};
+				}
 				model.sessions.watershedSessions = this.getTopicFilteredSessionsFromModel(model, 'watershed');
 				model.sessions.scenarioSessions = this.getTopicFilteredSessionsFromModel(model, 'scenario');
 				var htmlOutput = Sparrow.index.ModelTemplater.modelDetails(model);
