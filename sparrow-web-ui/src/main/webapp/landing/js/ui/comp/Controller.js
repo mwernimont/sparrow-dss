@@ -46,7 +46,11 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		this.models = config.models;
 		
 		/**
-		 * 
+		 * The server model spreads the client-side app's 'region'
+		 *  concept across three server-side variables : 'state', 
+		 * 'region', and, 'national'. This function determines if the 
+		 * parameterized place of interest is in any of the model's place
+		 * variables.
 		 * @param {Object} model
 		 * @param {String} placeOfInterest a lower-cased state or region
 		 * @return {Boolean}
@@ -74,6 +78,26 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			return isInteresting;
 		};
 		
+		//the values on the right hand of the map have been lower-cased
+		//and had their spaces removed to accommodate slight variation
+		//in the server-side constituent name
+		var clientSideParameterIdToServerSideConstituentName = {
+			"oc" : "organiccarbon",
+			"ds" : "totaldissolvedsolids",
+			"ss" : "suspendedsediment",
+			"nitrogen" : "nitrogen",
+			"phosphorus" : "phosphorus"
+		};
+		/**
+		 * Normalizes the server side constituent name by removing 
+		 * spaces and lower-casing.
+		 * 
+		 * @param {String} name
+		 * @return {String} normalized version of the name
+		 */
+		var normalizeServerSideConstituentName = function(name){
+			return name.replace(/ /g, '').toLowerCase();
+		};
 		/**
 		 * 
 		 * @param {String} placeOfInterest - either a region, a state, or 'any'
@@ -84,17 +108,18 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			parameterOfInterest = parameterOfInterest.toLowerCase();
 			placeOfInterest = placeOfInterest.toLowerCase();
 			
-			//the server model uses 'constituent' instead of 'parameter'
-			//the server model also spreads the client-side app's 
-			//'region' concept across three server-side variables : 'state', 
-			//'region', and, 'isNational'
+			
 			
 			var relevantModels = [].concat(this.models);
 			if(parameterOfInterest && 'any' !== parameterOfInterest){
+				//the server model uses 'constituent' instead of 'parameter'
+				var serverSideConstituentOfInterest = clientSideParameterIdToServerSideConstituentName[parameterOfInterest];
 				relevantModels = relevantModels.filter(function(model){
-					return model.constituent.toLowerCase() === parameterOfInterest;
+					var normalizedServerSideConstituentName = normalizeServerSideConstituentName(model.constituent);
+					return normalizedServerSideConstituentName === serverSideConstituentOfInterest;
 				});
 			}
+			
 			if(placeOfInterest && 'any' !== placeOfInterest){
 				relevantModels = relevantModels.filter(function(model){
 					return containsInterestingPlace(model, placeOfInterest);
