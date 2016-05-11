@@ -173,30 +173,120 @@ public class ModelParser {
 	
 	public List<IPredefinedSession> parseSessions(XMLStreamReader in) {
 		log.warn("Sessions parsing not yet supported");
+		//create an empty list of sessions
+		//keep the event loop running 
+			//check the start element event
+				//if it matches SESSIONS
+					//list_of_sessions.add(parseSession(in))
+			//check the end element event
+				//if it matches SESSIONS, return the list of sessions, else throw exception
 		return null;
 	}
 	public PredefinedSession parseSession(XMLStreamReader in) {
 		log.warn("Session parsing not yet supported");
+		//create PredefinedSessionBuilder 'builder'
+		//keep the event loop running
+			//check the start element event
+				//localName <- in.getLocalName()
+				//switch(localName)
+					//case something:
+						//builder.setStringProperty(ParserHelper.parseSimpleElementValue())
+					//case something else: 
+						//builder.setIntProperty(ParserHelper.parseSimpleElementInt())
+					
+					//...etc
+					//default:
+						//it's an unexpected element so throw exception
+			//check the end element event
+				///if it matches SESSION, return builder.toImmutable(), else throw exception
 		return null;
 	}
 	public List<Source> parseSources(XMLStreamReader in) {
 		log.warn("Sources parsing not yet supported");
+		
+		//create an empty list of sources
+		//keep the event loop running 
+			//check the start element event
+				//if it matches SOURCES
+					//list_of_sources.add(parseSource(in))
+			//check the end element event
+				//if it matches SOURCES, return the list of sources, else throw exception
+		
 		return null;
 	}
 	public Source parseSource(XMLStreamReader in) {
 		log.warn("Source parsing not yet supported");
+		//create SourcesBuilder 'builder'
+		//keep the event loop running
+			//check the start element event
+				//localName <- in.getLocalName()
+				//switch(localName)
+					//case something:
+						//builder.setStringProperty(ParserHelper.parseSimpleElementValue())
+					//case something else: 
+						//builder.setIntProperty(ParserHelper.parseSimpleElementInt())
+					
+					//...etc
+					//default:
+						//it's an unexpected element so throw exception
+			//check the end element event
+				///if it matches SOURCE, return builder.toImmutable(), else throw exception
 		return null;
 	}
 	public void parseSpatialMembership(XMLStreamReader in, SparrowModelBuilder smb) {
 		log.warn("Spatial membership parsing not yet supported");
+		//keep the event loop running
+			//check the start element event
+				//localName <- in.getLocalName()
+				//switch(localName)
+					//case NATIONAL:
+						//smb.setNational(ParserHelper.parseSimpleElementBool())
+					//case STATES: 
+						//smb.setStates(ParserHelper.parseSimpleElementValue())
+					
+					//...etc
+					//default:
+						//it's an unexpected element so throw exception
+			//check the end element event
+				///if it matches SPATIAL_MEMBERSHIP, return, else throw exception
 	}
 	
 	public void parseStatus(XMLStreamReader in, SparrowModelBuilder smb) throws XMLStreamException {
 		log.warn("Status parsing not yet supported");
+			//keep the event loop running
+			//check the start element event
+				//localName <- in.getLocalName()
+				//switch(localName)
+					//case APPROVED:
+						//smb.setApproved(ParserHelper.parseSimpleElementBool())
+					//case PUBLIC: 
+						//smb.setPublic(ParserHelper.parseSimpleElementBool())
+					
+					//...etc
+					//default:
+						//it's an unexpected element so throw exception
+			//check the end element event
+				///if it matches STATUS, return, else throw exception
+		
 	}
 	
 	public void parseBounds(XMLStreamReader in, SparrowModelBuilder smb) {
 		log.warn("Bounds parsing not yet supported");
+		
+		//keep the event loop running
+			//check the attribute event
+				//localName <- in.getLocalName()
+				//switch(localName)
+					//case NORTH_BOUNDS:
+						//smb.setNorthBounds(ParserHelper.parseSimpleElementDouble())
+					//case SOUTH_BOUNDS:
+						//smb.setSouthBounds(ParserHelper.parseSimpleElementDouble())
+					
+					//...etc
+					//default:
+						//it's an unexpected element so throw exception
+			//check the end element event
+				///if it matches BOUNDS, return, else throw exception
 	}
 
 }
