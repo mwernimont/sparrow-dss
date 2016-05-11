@@ -206,8 +206,11 @@
 			</div>
 			<img src="landing/images/usa_map.gif" title="US States" alt="US States" width="460" height="270" usemap="#us_mapMap" />
 			<select id="region-combo-input" name="region-combo-input" size="1" onChange="CONTROLLER.selectRegion(this);">
+				<optgroup label="">
 				<option value="Any">Any Region or State</option>
 				<option value="National">National</option>
+				</optgroup>
+				<optgroup label="Regions">
 				<option value="MRB1">New England and Mid-Atlantic</option>
 				<option value="MRB3">Great Lakes, Ohio, Upper Mississippi, and Souris-Red-Rainy</option>
 				<option value="MRB2">South Atlantic-Gulf and Tennessee</option>
@@ -216,7 +219,8 @@
 				<option value="MRB7">Pacific Northwest</option>
 				<option value="MRB8">California</option>
 				<option value="MRB6">Rio Grande, Colorado, and Great Basin</option>
-				<option value="">-- US States --</option>
+				</optgroup>
+				<optgroup label ="US States">
 				<option value="AL">Alabama</option>
 				<option value="AZ">Arizona</option>
 				<option value="AR">Arkansas</option>
@@ -265,6 +269,7 @@
 				<option value="WV">West Virginia</option>
 				<option value="WI">Wisconsin</option>
 				<option value="WY">Wyoming</option>
+				</optgroup>
 			</select>
 
 			<div id="search-by-const-header">
