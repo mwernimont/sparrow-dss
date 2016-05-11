@@ -63,7 +63,7 @@
 
 						{{#if enhNetworkUrl.length}}
 						<dt>Stream Network:</dt>
-						<dd><a href="{{networkUrl}}" title=
+						<dd><a href="{{enhNetworkUrl}}" title=
 						"The network model and associated geometry the model is based on">{{enhNetworkName}}</a><br />
 							<i>Geometry and additional reach and network attribute data are available with
 								the stream network data, which is available as a separate download.</i>
