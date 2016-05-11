@@ -141,7 +141,7 @@
         <script src="js/sparrow_rpc.js"></script>
 
 		<%--  onReady File  --%>
-		<script src='landing/js/ui/onReady2.js?rev=1' type="text/javascript"></script>
+		<script src='landing/js/ui/onReady.js?rev=1' type="text/javascript"></script>
 
     	<title>SPARROW Decision Support System</title>
 
