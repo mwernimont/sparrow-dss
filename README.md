@@ -6,4 +6,3 @@ Track transport to downstream receiving waters, such as reservoirs and estuaries
 Evaluate management source-reduction scenarios
 Overlay land use, shaded relief, street-level data, states, counties, and hydrologic units.
 Differences among models for the same constituent, time period, and geographical area reflect an evolution of the model applications, technology, and geospatial data as described in supporting documentation.
-
