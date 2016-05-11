@@ -1,9 +1,8 @@
 Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 	region : undefined,
 	parameter : undefined,
-	uuid: undefined,
 	modelId: undefined,
-	
+	models : undefined,
 	/** Constants */
 	HISTORY_ITEM_SEPARATOR : ":",
 	HISTORY_NAME_VALUE_SEPARATOR : "=",
@@ -44,7 +43,66 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		
 		this.region = config.region;
 		this.parameter = config.parameter;
+		this.models = config.models;
 		
+		/**
+		 * 
+		 * @param {Object} model
+		 * @param {String} placeOfInterest a lower-cased state or region
+		 * @return {Boolean}
+		 */
+		var containsInterestingPlace = function(model, placeOfInterest){
+			var isInteresting = false;
+			if(model.spatialMembership.national){
+				isInteresting = true;
+			} else {
+				if (model.spatialMembership.states){
+					var interestingStates = model.spatialMembership.states.state.filter(function(state){
+						return state.toLowerCase() === placeOfInterest;
+					});
+					isInteresting = interestingStates.length > 0;
+				}
+				//can skip if model's states are already interesting
+				if (!isInteresting && model.spatialMembership.regions){
+					var interestingRegions = model.spatialMembership.regions.region.filter(function(region){
+						return region.toLowerCase() === placeOfInterest;
+					});
+					isInteresting = interestingRegions.length > 0;
+				}
+			}
+			
+			return isInteresting;
+		};
+		
+		/**
+		 * 
+		 * @param {String} placeOfInterest - either a region, a state, or 'any'
+		 * @param {type} parameterOfInterest - a parameter (a.k.a constituent)
+		 * @return {Array}
+		 */
+		this.getRelevantModels = function(placeOfInterest, parameterOfInterest){
+			parameterOfInterest = parameterOfInterest.toLowerCase();
+			placeOfInterest = placeOfInterest.toLowerCase();
+			
+			//the server model uses 'constituent' instead of 'parameter'
+			//the server model also spreads the client-side app's 
+			//'region' concept across three server-side variables : 'state', 
+			//'region', and, 'isNational'
+			
+			var relevantModels = [].concat(this.models);
+			if(parameterOfInterest && 'any' !== parameterOfInterest){
+				relevantModels = relevantModels.filter(function(model){
+					return model.constituent.toLowerCase() === parameterOfInterest;
+				});
+			}
+			if(placeOfInterest && 'any' !== placeOfInterest){
+				relevantModels = relevantModels.filter(function(model){
+					return containsInterestingPlace(model, placeOfInterest);
+				});
+			}
+			
+			return relevantModels;
+		};
 		config = Ext.apply({
 			
 		}, config);
@@ -63,41 +121,56 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 			this.selectValue('region-combo-input', region);
 			this.selectValue('constituent-combo-input', param);
 			
-			var params = this.buildConfig(region, param);
-			var output = CSWClient.getQueryResultsAsHTML({query : params});
+			var relevantModels = this.getRelevantModels(region, param);
+			var output = Sparrow.index.ModelTemplater.listOfModels({models:relevantModels});
 			
 			this.updateModelList(output);
 		}, this);
 		
-		///////
-		this.on(this.METADATA_KEY, function(modelUUID) {
-
-			if (modelUUID != null) {
-				var htmlOutput = CSWClient.getRecordById({id : modelUUID});
-				
-				this.updateModelDisplay(htmlOutput, true);
-			}
-
-		}, this);
+		this.displayModelDetails = function(modelId) {
 		
-		this.on(this.MODELID_KEY, function(modelId) {
-
-			var modelUUID = null;
-			
-			if (modelId != null) {
-				//Find the UUID
-				var params = [modelId];
-				var fullXml = CSWClient.getQueryResultsAsXML({query : params});
-				modelUUID = CSWClient.findModelUUID(fullXml);
-			}
-			
-			if (modelUUID != null) {
-				var htmlOutput = CSWClient.getRecordById({id : modelUUID});
+			if (modelId !== null) {
+				var model = this.models.filter(function(model){
+					return model['@id'] === modelId;
+				})[0];
+				
+				if(!model.sessions) {
+					model.sessions = {};
+				}
+				model.sessions.watershedSessions = this.getTopicFilteredSessionsFromModel(model, 'watershed');
+				model.sessions.scenarioSessions = this.getTopicFilteredSessionsFromModel(model, 'scenario');
+				var htmlOutput = Sparrow.index.ModelTemplater.modelDetails(model);
 				
 				this.updateModelDisplay(htmlOutput, true);
 			}
 
-		}, this);
+		};
+		
+		/**
+		 * Simple filter function that performs null-checks and selects
+		 * the parameterized topic
+		 * 
+		 * @param {Object} model
+		 * @param {String} topicToKeep. Must be lower-cased.
+		 * @return {Array<Object>}
+		 */
+		this.getTopicFilteredSessionsFromModel = function(model, topicToKeep){
+			if(model.sessions && model.sessions.session && model.sessions.session.length){
+				return model.sessions.session.filter(function(session){
+					var topic = session["@topic"];
+					if(topic && topic.length){
+						return topic.toLowerCase() === topicToKeep;
+					} else {
+						return false;
+					}
+				});
+			} else {
+				return [];
+			}
+		};
+		
+		this.on(this.METADATA_KEY, this.displayModelDetails, this);
+		this.on(this.MODELID_KEY, this.displayModelDetails, this);
 		
 		this.on(this.NO_MODEL_ID_KEY, function() {
 
@@ -112,10 +185,6 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 
 
 		}, this);
-		
-		
-		
-		////
 	},
 	
 
@@ -267,7 +336,6 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 		if (id) {
 			
 			this.fireEvent(this.METADATA_KEY, id);
-			this.uuid = id;
 			
 			//Right now we are picking the model ID out of an id'ed html element
 			//that is built from the returned xml.  Kind of inefficient, but
