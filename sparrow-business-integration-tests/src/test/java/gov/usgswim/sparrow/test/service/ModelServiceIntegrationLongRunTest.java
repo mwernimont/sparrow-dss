@@ -2,7 +2,7 @@ package gov.usgswim.sparrow.test.service;
 
 import gov.usgs.webservices.framework.formatter.XMLPassThroughFormatter;
 import gov.usgswim.sparrow.SparrowTestBaseWithDBandCannedModel50;
-import gov.usgswim.sparrow.service.model.ModelParser;
+import gov.usgswim.sparrow.service.model.ModelRequestParser;
 import gov.usgswim.sparrow.service.model.ModelRequest;
 import gov.usgswim.sparrow.service.model.ModelService;
 
@@ -46,7 +46,7 @@ public class ModelServiceIntegrationLongRunTest extends SparrowTestBaseWithDBand
 						.getResourceAsStream("/gov/usgswim/sparrow/test/sample/meta_request_1.xml"));
 
 		ModelService service = new ModelService();
-		ModelParser parser = new ModelParser();
+		ModelRequestParser parser = new ModelRequestParser();
 
 		File outFile = File.createTempFile("model-service-test", ".xml");
 		FileOutputStream fos = new FileOutputStream(outFile);
