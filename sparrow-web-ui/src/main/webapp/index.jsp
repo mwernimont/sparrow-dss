@@ -286,7 +286,7 @@
 
 			<div id="search-results-container">
 				<h3 class="divider">Models matching your criteria <span class="note">(click a model to show details)</span></h3>
-				<div id="csw-output">
+				<div id="model-list-output">
 					<div class="model-select-default-instructions">
 						<h4>No models match your criteria</h4>
 						<p>Change the region and constituent filters to look for other models.</p>

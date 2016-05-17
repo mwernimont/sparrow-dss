@@ -7,18 +7,23 @@ import gov.usgs.cida.sparrow.service.util.ServiceResponseWrapper;
 import gov.usgswim.sparrow.action.CreateGeoserverLayer;
 import gov.usgswim.sparrow.action.WriteDbfFileForContext;
 import gov.usgswim.sparrow.domain.PredictionContext;
+import gov.usgswim.sparrow.postgres.action.CreateViewForLayer;
+import gov.usgswim.sparrow.postgres.action.LoadInitialViews;
 import gov.usgswim.sparrow.service.AbstractSparrowServlet;
 import gov.usgswim.sparrow.service.SharedApplication;
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class RegisterMapLayerService extends AbstractSparrowServlet {
+        
 
 	private static final long serialVersionUID = 1L;
+        private static boolean hasLoadedInitialViews = false;
 
 	@Override
 	protected void doActualGet(HttpServletRequest httpReq, HttpServletResponse resp)
@@ -33,7 +38,7 @@ public class RegisterMapLayerService extends AbstractSparrowServlet {
 
 		Map params = httpReq.getParameterMap();
 
-        Integer contextId = getInteger(params, "context-id");
+                Integer contextId = getInteger(params, "context-id");
 		String projectedSrs = getClean(params, "projected-srs");
 		
 		log.trace("Received a request to register a map layer for contextid: " + contextId + " projection: " + projectedSrs);
@@ -55,15 +60,26 @@ public class RegisterMapLayerService extends AbstractSparrowServlet {
 				throw new Exception("The context for the id '" + contextId + "' cannot be found");
 			}
 			
-			//Write the data column of the context to disk if it does not yet exist
-			WriteDbfFileForContext writeDbfFile = new WriteDbfFileForContext(context);
-			File dbfFile = writeDbfFile.getDbfFile();
-			if (!dbfFile.exists()) {
-				dbfFile = writeDbfFile.run();
-			}
-			
+                        if (!hasLoadedInitialViews) {
+                        // LoadInitialViews script that will identify any model_output rows that should have views created and create them.
+                        // Typically, this will only be done when the application is bounced to bring in a new model. 
+                        // Requires that the model output rows have been inserted via a script (from a shape dbf file).
+                        // Part two is to expose the views as layers on geoserver via the cglAction below.
+                            LoadInitialViews loadViews = new LoadInitialViews();
+                            loadViews.doAction();
+                            hasLoadedInitialViews = true;
+                        }
+          
+			//Write the data column of the context if it does not yet exist
+			WriteDbfFileForContext getOutputValues = new WriteDbfFileForContext(context); //TODO SPDSSII-28 write the row to the postgres table model_output
+                        HashMap dbfValuesMap = getOutputValues.run();
+
+                        CreateViewForLayer cvlAction = new CreateViewForLayer(context, dbfValuesMap);                    
+                        List viewNames = cvlAction.run();
+                        
+
 			//Register the data plus the shapefile w/ GeoServer as a layer
-			CreateGeoserverLayer cglAction = new CreateGeoserverLayer(context, dbfFile, projectedSrs);
+			CreateGeoserverLayer cglAction = new CreateGeoserverLayer(context, viewNames, projectedSrs);
 			String wpsResponse = cglAction.run();
 			
 			if (cglAction.getException() != null) {

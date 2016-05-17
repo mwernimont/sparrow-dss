@@ -279,18 +279,6 @@
         </init-param>
     </servlet>
     <servlet>
-        <servlet-name>GeonetworkProxyServlet</servlet-name>
-        <servlet-class>gov.usgswim.sparrow.GeoNetworkXSLTProxy</servlet-class>
-        <init-param>
-            <param-name>forward-context</param-name>
-            <param-value>ignore/me/bc/the/servlet/supplies/its/own/url/as/a/hack</param-value>
-        </init-param>
-        <init-param>
-            <param-name>skip-jsession-cookie</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </servlet>
-    <servlet>
         <servlet-name>IndividualReachPredictionServlet</servlet-name>
         <servlet-class>gov.usgswim.sparrow.SparrowProxyServlet</servlet-class>
         <init-param>
@@ -433,14 +421,6 @@
     <servlet-mapping>
         <servlet-name>IndividualReachPredictionServlet</servlet-name>
         <url-pattern>/sp_indivReachPredict/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GeonetworkProxyServlet</servlet-name>
-        <url-pattern>/sparrow_geonetwork/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GeonetworkProxyServlet</servlet-name>
-        <url-pattern>/sparrow_geonetwork</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HealthTest</servlet-name>

@@ -352,9 +352,8 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 	},
 	
 	/**
-	 * UUID of the ID of the model.
 	 * 
-	 * @param id The fileIdentification id, which is a CSW UUID.
+	 * @param id The fileIdentification id
 	 */
 	selectUUID : function(id) {
 
@@ -386,7 +385,7 @@ Sparrow.index.Controller = Ext.extend(Ext.util.Observable, {
 	
 	/* Util */ 
 	updateModelList : function(htmlContent) {
-		var outputComp = document.getElementById('csw-output');
+		var outputComp = document.getElementById('model-list-output');
 		outputComp.innerHTML = htmlContent;
 		
 		//Highlight the change

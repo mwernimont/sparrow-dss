@@ -136,9 +136,6 @@
 								<GeoserverPort>${GeoserverPort}</GeoserverPort>
 								<GeoserverContextPath>${GeoserverContextPath}</GeoserverContextPath>
 								<MaxNumberOfModelsToRun>${MaxNumberOfModelsToRun}</MaxNumberOfModelsToRun>
-								<GeonetworkHost>${GeonetworkHost}</GeonetworkHost>
-								<GeonetworkPort>${GeonetworkPort}</GeonetworkPort>
-								<GeonetworkContextPath>${GeonetworkContextPath}</GeonetworkContextPath>
 								<EnableAppLevelDebugMessages>${EnableAppLevelDebugMessages}</EnableAppLevelDebugMessages>
 							</propertiesUser>
 						</configuration>
