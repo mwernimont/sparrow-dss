@@ -12,7 +12,7 @@
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
     </TestPlan>
     <hashTree>
-      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Dev Server Configuration Variables" enabled="false">
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Dev Server Configuration Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="ServiceHost" elementType="Argument">
             <stringProp name="Argument.name">ServiceHost</stringProp>
@@ -58,7 +58,7 @@
             <stringProp name="Argument.name">MaxNumberOfModelsToRun</stringProp>
             <stringProp name="Argument.value">${__P(MaxNumberOfModelsToRun,99)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
-            <stringProp name="Argument.desc">Filters how many models ids are queied fromGeoNetwork (sort order unknown)</stringProp>
+            <stringProp name="Argument.desc">Filters how many models ids are queued(sort order unknown)</stringProp>
           </elementProp>
           <elementProp name="MaxNumberOfTilesPerMap" elementType="Argument">
             <stringProp name="Argument.name">MaxNumberOfTilesPerMap</stringProp>
@@ -146,7 +146,7 @@
             <stringProp name="Argument.name">MaxNumberOfModelsToRun</stringProp>
             <stringProp name="Argument.value">${__P(MaxNumberOfModelsToRun,99)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
-            <stringProp name="Argument.desc">Filters how many models ids are queied fromGeoNetwork (sort order unknown)</stringProp>
+            <stringProp name="Argument.desc">Filters how many models ids are queued(sort order unknown)</stringProp>
           </elementProp>
           <elementProp name="MaxNumberOfTilesPerMap" elementType="Argument">
             <stringProp name="Argument.name">MaxNumberOfTilesPerMap</stringProp>
@@ -234,7 +234,7 @@
             <stringProp name="Argument.name">MaxNumberOfModelsToRun</stringProp>
             <stringProp name="Argument.value">${__P(MaxNumberOfModelsToRun,99)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
-            <stringProp name="Argument.desc">Filters how many models ids are queied fromGeoNetwork (sort order unknown)</stringProp>
+            <stringProp name="Argument.desc">Filters how many models ids are queued(sort order unknown)</stringProp>
           </elementProp>
           <elementProp name="MaxNumberOfTilesPerMap" elementType="Argument">
             <stringProp name="Argument.name">MaxNumberOfTilesPerMap</stringProp>
