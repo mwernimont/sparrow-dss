@@ -146,7 +146,7 @@
               <p id="footer-page-url">URL: </p>
               <p id="footer-contact-info">
                 Page Contact Information:
-                <a title="Contact Email" href="mailto:eeverman@usgs.gov?subject=Sparrow Map Comments">webmaster</a>
+                <a title="Contact Email" href="mailto:sparrowdss@usgs.gov?subject=Sparrow Map Comments">webmaster</a>
 
               </p>
               <p id="footer-page-modified-info">Page Last modified: <script type="text/javascript">document.write(document.lastModified);</script></p>
