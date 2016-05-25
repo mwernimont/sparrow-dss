@@ -47,7 +47,7 @@
 		<param name="BufferSize" value="512" />
 		<param name="SMTPHost" value="localhost" />
 		<param name="From" value="sparrow_server@${hostname}.gov" />
-		<param name="To" value="eeverman@usgs.gov" />
+		<param name="To" value="sparrowdss@usgs.gov" />
 		<param name="Subject" value="SPARROW ERROR from ${hostname}" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{ABSOLUTE} %5p %C{1}:%L - %m%n" />
