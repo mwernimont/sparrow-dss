@@ -15,4 +15,6 @@ alter table SPARROW_MODEL add (
 
 alter table SPARROW_MODEL move COMPRESS;
 
---rollback alter table SPARROW_MODEL drop (states, national, regions, base_year); alter table SPARROW_MODEL move COMPRESS;
+--rollback alter table SPARROW_MODEL move NOCOMPRESS;
+--rollback alter table SPARROW_MODEL drop (states, is_national, regions, base_year);
+--rollback alter table SPARROW_MODEL move COMPRESS;

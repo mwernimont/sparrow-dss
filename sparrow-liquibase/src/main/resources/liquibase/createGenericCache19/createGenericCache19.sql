@@ -11,11 +11,11 @@ CREATE TABLE "GENERIC_CACHE" (
 	"VALUE" BLOB, 
 	"LAST_TOUCHED" TIMESTAMP (6)
 );
---rollback drop table 'generic_cache';
+--rollback drop table generic_cache;
 
 --changeset cschroed:createGenericCacheLastTouchedIndex
 CREATE INDEX "GENERIC_CACHE_LAST_TOUCHED" ON "GENERIC_CACHE" ("LAST_TOUCHED");
---rollback drop index 'GENERIC_CACHE_LAST_TOUCHED';
+--rollback drop index GENERIC_CACHE_LAST_TOUCHED;
 
 --changeset cschroed:createGenericCacheUniqueIndex
 CREATE UNIQUE INDEX "GENERIC_CACHE_UK" ON "GENERIC_CACHE" ("VALUE_CLASS", "KEY");

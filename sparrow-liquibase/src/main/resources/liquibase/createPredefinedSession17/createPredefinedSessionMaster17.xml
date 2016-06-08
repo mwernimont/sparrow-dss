@@ -18,6 +18,9 @@
 			relativeToChangelogFile="true"
 			splitStatements="false"
 		/>
+		<rollback>
+			DROP TRIGGER "PREDEFINED_SESSION_AUTO_ID_TRG";
+		</rollback>
 	</changeSet>
 	<include file="enablePredefinedSessionTrigger17.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
