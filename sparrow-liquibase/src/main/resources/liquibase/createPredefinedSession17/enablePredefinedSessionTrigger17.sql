@@ -7,4 +7,4 @@
 --changeset cschroed:enableAutoIncrementPKonPredefinedSession
 
 ALTER TRIGGER "PREDEFINED_SESSION_AUTO_ID_TRG" ENABLE;
---rollback ALTER TRIGGER "PREDEFINED_SESSION_AUTO_ID_TRG" DISABLE;
+--rollback SELECT * FROM DUAL;
