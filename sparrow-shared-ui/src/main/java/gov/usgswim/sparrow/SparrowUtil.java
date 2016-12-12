@@ -19,9 +19,11 @@ public class SparrowUtil {
 //				String requestServerName = null;
 //				String requestServerPort = null;
 //				String contextPath = null;
-				
+
 				if (proxiedUrl != null && proxiedUrl.length() > 0) {
 					URL url = new URL(proxiedUrl);
+					String protocol = url.getProtocol();
+					features.scheme = protocol;
 					String path = url.getPath();
 					if (path.startsWith("/")) path = path.substring(1);
 					int firstSlash = path.indexOf("/");
@@ -45,7 +47,7 @@ public class SparrowUtil {
 				} else {
 					features.contextPath = request.getContextPath();
 					features.serverName = request.getServerName();
-					
+					features.scheme = request.getScheme();
 					int port = request.getServerPort();
 					if (port > 80) {
 						features.intServerPort = port;
@@ -61,6 +63,7 @@ public class SparrowUtil {
 	}
 	
 	public static class UrlFeatures {
+		public String scheme;
 		public String serverName;
 		public String serverPort;
 		public String contextPath;
@@ -68,7 +71,7 @@ public class SparrowUtil {
 		
 		
 		public String getBaseUrlWithoutSlash() {
-			String serverToUse = "http://";
+			String serverToUse = scheme;
 			if (intServerPort > 80) {
 				serverToUse = serverToUse + serverName + ":" + serverPort + contextPath;
 			} else {
