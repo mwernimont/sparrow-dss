@@ -799,7 +799,7 @@ ul.news li {
 .area-3 .hfeed .hentry .headline
 {
 	display: block; padding-left: 16px;
-	background: url(http://infotrek.er.usgs.gov/docs/usgs_vis_std/assets/dotted_bullet.gif);
+	background: url(https://infotrek.er.usgs.gov/docs/usgs_vis_std/assets/dotted_bullet.gif);
 	background-position: 4px .2em;
 	background-repeat: no-repeat;
 }
@@ -809,7 +809,7 @@ ul.news li {
 .area-3 .hfeed .urgent .headline
 {
 	background-position: left top;
-	background-image: url(http://infotrek.er.usgs.gov/docs/usgs_vis_std/assets/exclamation.gif);
+	background-image: url(https://infotrek.er.usgs.gov/docs/usgs_vis_std/assets/exclamation.gif);
 }
 
 
