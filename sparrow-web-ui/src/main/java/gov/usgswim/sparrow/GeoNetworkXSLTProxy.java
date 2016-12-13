@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,8 +50,8 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 	private static final String UTF_8 = "UTF-8";
 	private static final String CSW_QUERY_RESULTS_TO_HTML_XSLT_PATH = "/gov/usgswim/sparrow/landing/xslt/csw_xml-to-html-results.xsl";
 	private static final String CSW_ID_RESULT_TO_HTML_XSLT_PATH = "/gov/usgswim/sparrow/landing/xslt/csw_id_to_html.xsl";
-	private static final String PUBLISHED_SERVER_NAME = "http://water.usgs.gov/nawqa/sparrow/dss/";
-	private static final String ACTUAL_SERVER_NAME = "http://cida.usgs.gov/sparrow/";
+	private static final String PUBLISHED_SERVER_NAME = "http[s]{0,1}://water.usgs.gov/nawqa/sparrow/dss/";
+	private static final String ACTUAL_SERVER_NAME = "http[s]{0,1}://cida.usgs.gov/sparrow/";
 	
 	
 	/**
@@ -174,6 +175,7 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 				
 				UrlFeatures urlFeatures = SparrowUtil.getRequestUrlFeatures(request);
 				
+				String requestServerScheme = urlFeatures.scheme;
 				String requestServerName = urlFeatures.serverName;
 				String requestServerPort = urlFeatures.serverPort;
 				String contextPath = urlFeatures.contextPath;
@@ -185,7 +187,7 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 						log.debug("POST to '" + targetURL.toExternalForm()  + "' is a /query for HTML content");
 						InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream(CSW_QUERY_RESULTS_TO_HTML_XSLT_PATH);
 						
-						copyStreams(targetIs, response, xsltStream, requestServerName, requestServerPort, contextPath);
+						copyStreams(targetIs, response, xsltStream, requestServerScheme, requestServerName, requestServerPort, contextPath);
 					} else {
 						//It should be asking for XML otherwise, but we have nothing else to offer
 						
@@ -202,7 +204,7 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 					if (HTML_MIME_TYPE.equals(request.getHeader("Accept"))) {
 						log.debug("POST to '" + targetURL.toExternalForm()  + "' is a /byid for HTML content");
 						InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream(CSW_ID_RESULT_TO_HTML_XSLT_PATH);
-						copyStreams(targetIs, response, xsltStream, requestServerName, requestServerPort, contextPath);;
+						copyStreams(targetIs, response, xsltStream, requestServerScheme, requestServerName, requestServerPort, contextPath);;
 					} else {
 						//It should be asking for XML otherwise, but we have nothing else to offer
 						log.debug("POST to '" + targetURL.toExternalForm()  + "' is a /byid for XML content");
@@ -289,7 +291,7 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 	 * @throws IOException
 	 */
 	public static void copyStreams(InputStream src, HttpServletResponse response,
-			InputStream xsltStream, String requestedServerName, String requestedServerPort, String contextPath)
+			InputStream xsltStream, String requestedServerScheme, String requestedServerName, String requestedServerPort, String contextPath)
 			throws IOException {
 
 		
@@ -322,7 +324,7 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 			//killing their session cookies)
 			
 
-			String serverToUse = "http://";
+			String serverToUse = requestedServerScheme + "://";
 			if (requestedServerPort != null && requestedServerPort.length() > 0 && ! requestedServerPort.equals("80")) {
 				serverToUse = serverToUse + requestedServerName + ":" + requestedServerPort + contextPath + "/";
 			} else {
@@ -331,12 +333,12 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 			
 			
 			//Replace any refs to the published name w/ the current location
-			strResponse = strResponse.replace(PUBLISHED_SERVER_NAME, serverToUse);
+			strResponse = strResponse.replaceAll(PUBLISHED_SERVER_NAME, serverToUse);
 			
 			//Also replace any refs to the actual cida location if we are not
 			//on production.
-			if (! ACTUAL_SERVER_NAME.equals(requestedServerName)) {
-				strResponse = strResponse.replace(ACTUAL_SERVER_NAME, serverToUse);
+			if (! Pattern.compile(ACTUAL_SERVER_NAME).matcher(requestedServerName).matches()) {
+				strResponse = strResponse.replaceAll(ACTUAL_SERVER_NAME, serverToUse);
 			}
 			
 			response.setContentType(HTML_MIME_TYPE);
