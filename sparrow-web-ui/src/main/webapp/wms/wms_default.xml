@@ -6,9 +6,9 @@
 		<Abstract/>
 		<Status>PUBLIC</Status>
 		<PartnerName>USGS</PartnerName>
-		<PartnerWebURL>http://www.usgs.gov/</PartnerWebURL>
+		<PartnerWebURL>https://www.usgs.gov/</PartnerWebURL>
 		<GetCapabilitiesURL/>
-		<GetMapURL>http://server.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer/tile/</GetMapURL>
+		<GetMapURL>https://server.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer/tile/</GetMapURL>
 		<GetFeatureInfoURL/>
 		<BackingURL/>
 		<BackingService/>
@@ -20,7 +20,7 @@
 			<Name>ESRI NGS Topo US 2D</Name>
 			<Title>ESRI NGS Topo US 2D</Title>
 			<PartnerName>USGS</PartnerName>
-			<PartnerWebURL>http://www.usgs.gov/</PartnerWebURL>
+			<PartnerWebURL>https://www.usgs.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<MinScale>0</MinScale>
 			<MaxScale>100</MaxScale>
@@ -35,7 +35,7 @@
 			<BoundingBox/>
 			<Status>PUBLIC</Status>
 			<Type>RASTER IMAGE</Type>
-			<MetadataURL>http://server.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer</MetadataURL>
+			<MetadataURL>https://server.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer</MetadataURL>
 			<LogoURL/>
 			<SLDURL/>
 			<LegendURL>images/legends/esri2dworld.png</LegendURL>
@@ -58,10 +58,10 @@
 		<Abstract/>
 		<Status>PUBLIC</Status>
 		<PartnerName>USGS</PartnerName>
-		<PartnerWebURL>http://nationalmap.gov/</PartnerWebURL>
-		<GetCapabilitiesURL>http://services.nationalmap.gov/arcgis/services/govunits/MapServer/WMSServer?</GetCapabilitiesURL>
-		<GetMapURL>http://services.nationalmap.gov/arcgis/services/govunits/MapServer/WMSServer?</GetMapURL>
-		<GetFeatureInfoURL>http://services.nationalmap.gov/arcgis/services/govunits/MapServer/WMSServer?</GetFeatureInfoURL>
+		<PartnerWebURL>https://nationalmap.gov/</PartnerWebURL>
+		<GetCapabilitiesURL>https://services.nationalmap.gov/arcgis/services/govunits/MapServer/WMSServer?</GetCapabilitiesURL>
+		<GetMapURL>https://services.nationalmap.gov/arcgis/services/govunits/MapServer/WMSServer?</GetMapURL>
+		<GetFeatureInfoURL>https://services.nationalmap.gov/arcgis/services/govunits/MapServer/WMSServer?</GetFeatureInfoURL>
 		<BackingURL/>
 		<BackingService/>
 		<BackingVersion/>
@@ -131,7 +131,7 @@
 			<Title>County or Equivalent</Title>
 			<datasource>gis_cov</datasource>
 			<PartnerName>USGS</PartnerName>
-			<PartnerWebURL>http://www.usgs.gov/</PartnerWebURL>
+			<PartnerWebURL>https://www.usgs.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<MinScale>0</MinScale>
 			<MaxScale>.0007</MaxScale>
