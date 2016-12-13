@@ -7,7 +7,7 @@
         <h1>U.S. Geological Survey</h1>
         <!-- Not actually visible unless printed -->
         <div id="usgs-header-logo">
-            <a href="http://www.usgs.gov" title="Link to the US Geological Survey main web page">
+            <a href="https://www.usgs.gov" title="Link to the US Geological Survey main web page">
                 <img alt="USGS Logo" src="<%= pageRequestUrl.getBaseUrlWithSlash() %>images/usgs_logo_small.jpg" />
             </a>
         </div>
@@ -31,8 +31,8 @@
         <div id="ccsa-area">
             <h4 class="access-help">Top Level USGS Links</h4>
 			<ul>
-				<li><a href="http://www.usgs.gov/" title="Link to main USGS page">USGS Home</a></li>
-				<li><a href="http://www.usgs.gov/ask/index.html" title="Link to main USGS contact page">Contact USGS</a></li>
+				<li><a href="https://www.usgs.gov/" title="Link to main USGS page">USGS Home</a></li>
+				<li><a href="https://answers.usgs.gov/cgi-bin/gsanswers?tmplt=2" title="Link to main USGS contact page">Contact USGS</a></li>
 				<li><a href="http://search.usgs.gov/" title="Link to main USGS search (not publications search)">Search USGS</a></li>
 			</ul>
         </div>
