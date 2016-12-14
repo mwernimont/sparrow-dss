@@ -50,6 +50,19 @@ public class GeoNetworkXSLTProxy extends ProxyServlet {
 	private static final String UTF_8 = "UTF-8";
 	private static final String CSW_QUERY_RESULTS_TO_HTML_XSLT_PATH = "/gov/usgswim/sparrow/landing/xslt/csw_xml-to-html-results.xsl";
 	private static final String CSW_ID_RESULT_TO_HTML_XSLT_PATH = "/gov/usgswim/sparrow/landing/xslt/csw_id_to_html.xsl";
+	/**
+	 * The following regexes are used to replace public sparrow urls in 
+	 * responses from a CSW server with urls specific to the tier that 
+	 * is currently being used. This convention permits a data manager 
+	 * interacting with metadata records in the CSW server to enter the same
+	 * public sparrow urls on every tier without remembering/forgetting to 
+	 * update them when metadata needs to be promoted up through the tiers.
+	 * Currently, all of the CSW records have http public sparrow urls,
+	 * Eventually we may want to update the CSW records so that the urls 
+	 * in model metadata records use https. We can support this potential 
+	 * data modification by specifying regexes that match both http and 
+	 * https urls.
+	 */
 	private static final String PUBLISHED_SERVER_NAME = "http[s]{0,1}://water.usgs.gov/nawqa/sparrow/dss/";
 	private static final String ACTUAL_SERVER_NAME = "http[s]{0,1}://cida.usgs.gov/sparrow/";
 	
