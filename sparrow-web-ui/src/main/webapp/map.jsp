@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="scrollable_map/css/scrollable_map.css"/>
 
     <!-- Sparrow/USGS -->
-    <link type="text/css" rel="stylesheet" href="http://www.usgs.gov/styles/common.css" />
+    <link type="text/css" rel="stylesheet" href="https://www2.usgs.gov/styles/common.css" />
 	<link rel="stylesheet" href="css/usgs_style_main.css" />
 	<link rel="stylesheet" href="css/custom.css" />
 	<jsp:include page="template_ie7_sizer_fix.jsp" flush="true" />

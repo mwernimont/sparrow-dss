@@ -43,6 +43,7 @@ public class CreateGeoserverLayer extends Action<String> {
 	
 	
 	//Self Init
+	private String geoserverScheme;
 	private String geoserverHost;
 	private int geoserverPort;
 	private String geoserverPath;
@@ -115,6 +116,7 @@ public class CreateGeoserverLayer extends Action<String> {
 		JndiTemplate template = new JndiTemplate();
 		
 		try {
+			geoserverScheme = (String)template.lookup("java:comp/env/geoserver-scheme");
 			geoserverHost = (String)template.lookup("java:comp/env/geoserver-host");
 			geoserverPort = (Integer)template.lookup("java:comp/env/geoserver-port");
 			geoserverPath = (String)template.lookup("java:comp/env/geoserver-path");
@@ -163,7 +165,7 @@ public class CreateGeoserverLayer extends Action<String> {
 	public String getQueryResponse(String thePost) throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		URIBuilder uriBuild = new URIBuilder();
-		uriBuild.setScheme("http");
+		uriBuild.setScheme(geoserverScheme);
 		uriBuild.setHost(geoserverHost);
 		uriBuild.setPort(geoserverPort);
 		uriBuild.setPath(geoserverPath);

@@ -6,8 +6,8 @@
 		<Status>PUBLIC</Status>
 		<PartnerName>TNM Orthoimagery</PartnerName>
 		<PartnerWebURL>U.S. Geological Survey – National Geospatial Program</PartnerWebURL>
-		<GetCapabilitiesURL>http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_SCALE/ImageServer/WMSServer</GetCapabilitiesURL>
-		<GetMapURL>http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_SCALE/ImageServer/WMSServer</GetMapURL>
+		<GetCapabilitiesURL>https://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_SCALE/ImageServer/WMSServer</GetCapabilitiesURL>
+		<GetMapURL>https://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_SCALE/ImageServer/WMSServer</GetMapURL>
 		<BackingURL/>
 		<BackingService/>
 		<BackingVersion/>
@@ -16,7 +16,7 @@
 			<Name>0</Name>
 			<Title>The National Map High Resolution Orthoimagery</Title>
 			<PartnerName>Earth Resources Observation and Science (EROS)</PartnerName>
-			<PartnerWebURL>http://eros.usgs.gov/</PartnerWebURL>
+			<PartnerWebURL>https://eros.usgs.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<MinScale>0</MinScale>
 			<MaxScale>.000001</MaxScale>
@@ -58,8 +58,8 @@
 		<Status>PUBLIC</Status>
 		<PartnerName>USGS EDC Ortho NAIP</PartnerName>
 		<PartnerWebURL>Earth Resources Observation and Science (EROS)</PartnerWebURL>
-		<GetCapabilitiesURL>http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_NAIP/ImageServer/WMSServer</GetCapabilitiesURL>
-		<GetMapURL>http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_NAIP/ImageServer/WMSServer</GetMapURL>
+		<GetCapabilitiesURL>https://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_NAIP/ImageServer/WMSServer</GetCapabilitiesURL>
+		<GetMapURL>https://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_NAIP/ImageServer/WMSServer</GetMapURL>
 		<GetFeatureInfoURL/>
 		<BackingURL/>
 		<BackingService/>
@@ -69,7 +69,7 @@
 			<Name>0</Name>
 			<Title>USGS EROS Ortho NAIP 1 meter</Title>
 			<PartnerName>Earth Resources Observation and Science (EROS)</PartnerName>
-			<PartnerWebURL>http://eros.usgs.gov/</PartnerWebURL>
+			<PartnerWebURL>https://eros.usgs.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<MinScale>0</MinScale>
 			<MaxScale>100</MaxScale>
@@ -109,8 +109,8 @@
 		<Status>PUBLIC</Status>
 		<PartnerName>USGS EDC Ortho NAIP</PartnerName>
 		<PartnerWebURL>Earth Resources Observation and Science (EROS)</PartnerWebURL>
-		<GetCapabilitiesURL>http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_1Foot/ImageServer/WMSServer</GetCapabilitiesURL>
-		<GetMapURL>http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_1Foot/ImageServer/WMSServer</GetMapURL>
+		<GetCapabilitiesURL>https://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_1Foot/ImageServer/WMSServer</GetCapabilitiesURL>
+		<GetMapURL>https://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_1Foot/ImageServer/WMSServer</GetMapURL>
 		<GetFeatureInfoURL/>
 		<BackingURL/>
 		<BackingService/>
@@ -120,7 +120,7 @@
 			<Name>0</Name>
 			<Title>USGS EROS Ortho NAIP 1 foot</Title>
 			<PartnerName>Earth Resources Observation and Science (EROS)</PartnerName>
-			<PartnerWebURL>http://eros.usgs.gov/</PartnerWebURL>
+			<PartnerWebURL>https://eros.usgs.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<MinScale>0</MinScale>
 			<MaxScale>100</MaxScale>
@@ -148,9 +148,9 @@
 		<Abstract/>
 		<Status>PUBLIC</Status>
 		<PartnerName>USGS</PartnerName>
-		<PartnerWebURL>http://www.usgs.gov/</PartnerWebURL>
+		<PartnerWebURL>https://www.usgs.gov/</PartnerWebURL>
 		<GetCapabilitiesURL/>
-		<GetMapURL>http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/</GetMapURL>
+		<GetMapURL>https://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/</GetMapURL>
 		<GetFeatureInfoURL/>
 		<BackingURL/>
 		<BackingService/>
@@ -162,7 +162,7 @@
 			<Name>Esri Street Map</Name>
 			<Title>ESRI World Street Map</Title>
 			<PartnerName>USGS</PartnerName>
-			<PartnerWebURL>http://www.usgs.gov/</PartnerWebURL>
+			<PartnerWebURL>https://www.usgs.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<MinScale>0</MinScale>
 			<MaxScale>100</MaxScale>
@@ -177,7 +177,7 @@
 			<BoundingBox/>
 			<Status>PUBLIC</Status>
 			<Type>RASTER IMAGE</Type>
-			<MetadataURL>http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_ShadedRelief_World_2D/MapServer</MetadataURL>
+			<MetadataURL>https://server.arcgisonline.com/ArcGIS/rest/services/ESRI_ShadedRelief_World_2D/MapServer</MetadataURL>
 			<LogoURL/>
 			<SLDURL/>
 			<LegendURL>images/legends/esri2dstreet.png</LegendURL>
@@ -205,10 +205,10 @@
 		<Abstract/>
 		<Status>PUBLIC</Status>
 		<PartnerName>USGS</PartnerName>
-		<PartnerWebURL>http://nationalmap.gov/</PartnerWebURL>
-		<GetCapabilitiesURL>http://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?</GetCapabilitiesURL>
-		<GetMapURL>http://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?</GetMapURL>
-		<GetFeatureInfoURL>http://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?</GetFeatureInfoURL>
+		<PartnerWebURL>https://nationalmap.gov/</PartnerWebURL>
+		<GetCapabilitiesURL>https://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?</GetCapabilitiesURL>
+		<GetMapURL>https://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?</GetMapURL>
+		<GetFeatureInfoURL>https://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?</GetFeatureInfoURL>
 		<BackingURL/>
 		<BackingService/>
 		<BackingVersion/>
@@ -217,7 +217,7 @@
 			<Name>15</Name>
 			<Title>Land Cover, 2001 (NLCD)</Title>
 			<PartnerName>USGS</PartnerName>
-			<PartnerWebURL>http://nationalmap.gov/</PartnerWebURL>
+			<PartnerWebURL>https://nationalmap.gov/</PartnerWebURL>
 			<Resolution>0</Resolution>
 			<TimePeriod>01-jan-1900</TimePeriod>
 			<Classification id="7" zdepth="208010.05600773">
@@ -231,7 +231,7 @@
 			<Status>PUBLIC</Status>
 			<Type>RASTER IMAGE</Type>
 			<SLDURL/>
-			<LegendURL>http://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=15</LegendURL>
+			<LegendURL>https://raster.nationalmap.gov/arcgis/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=15</LegendURL>
 			<BackingName/>
 			<Description> NLCD 1992, NLCD 2001, and NLCD 2006 are National Land Cover Database
 				classification schemes based primarily on Landsat data along with ancillary data

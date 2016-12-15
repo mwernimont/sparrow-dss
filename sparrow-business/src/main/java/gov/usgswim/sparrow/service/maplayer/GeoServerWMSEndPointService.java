@@ -48,17 +48,18 @@ public class GeoServerWMSEndPointService extends AbstractSparrowServlet {
 		String geoserverHost;
 		int geoserverPort;
 		String geoserverPath;
-	
+		String geoserverScheme;
 		//We need to access these params to check if they exist, so we'll
 		//do this initiation here.
 		JndiTemplate template = new JndiTemplate();
 		
 		try {
+			geoserverScheme = (String)template.lookup("java:comp/env/geoserver-scheme");
 			geoserverHost = (String)template.lookup("java:comp/env/geoserver-host");
 			geoserverPort = (Integer)template.lookup("java:comp/env/geoserver-port");
 			geoserverPath = (String)template.lookup("java:comp/env/geoserver-path");
 			
-			URL url =  new URL("http", geoserverHost, geoserverPort, geoserverPath);
+			URL url =  new URL(geoserverScheme, geoserverHost, geoserverPort, geoserverPath);
 			wrap.setStatus(ServiceResponseStatus.OK);
 			wrap.setEntityClass(String.class);
 			wrap.addEntity(url.toExternalForm());
