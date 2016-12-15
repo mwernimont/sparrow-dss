@@ -23,10 +23,12 @@ public class GeoServerConnection {
 	
 	private static final int BUFFER_SIZE = 4096;
 	
+	private static final String DEFAULT_GEOSERVER_SCHEME = "http";
 	private static final String DEFAULT_GEOSERVER_HOST = "cida-eros-sparrowdev.er.usgs.gov";
 	private static final String DEFAULT_GEOSERVER_PATH = "/geoserver";
 	private static final int DEFAULT_GEOSERVER_PORT = 8081;
 	
+	private String geoserverScheme;
 	private String geoserverHost;
 	private int geoserverPort;
 	private String geoserverPath;
@@ -40,6 +42,15 @@ public class GeoServerConnection {
 	
 	private GeoServerConnection() {
 		JndiTemplate template = new JndiTemplate();
+		
+		try {
+			geoserverScheme = (String)template.lookup("java:comp/env/geoserver-scheme");
+		} catch(Exception e){
+			log.error("GeoServerConnection Constructor Exception: Unable to load "
+					+ " configuration from context.xml for the GeoServer Host.  Using "
+					+ "[" + GeoServerConnection.DEFAULT_GEOSERVER_SCHEME + "] as default.");
+			geoserverHost = GeoServerConnection.DEFAULT_GEOSERVER_SCHEME;
+		}
 		
 		try {
 			geoserverHost = (String)template.lookup("java:comp/env/geoserver-host");
@@ -68,7 +79,7 @@ public class GeoServerConnection {
 			geoserverPath = GeoServerConnection.DEFAULT_GEOSERVER_PATH;
 		}
 		
-		this.fullURL = "http://" + geoserverHost + ":" + geoserverPort + geoserverPath + "/";
+		this.fullURL = geoserverScheme + "://" + geoserverHost + ":" + geoserverPort + geoserverPath + "/";
 	}
 	
 	public static GeoServerConnection getInstance() {
