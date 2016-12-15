@@ -71,7 +71,7 @@ public class SparrowUtil {
 		
 		
 		public String getBaseUrlWithoutSlash() {
-			String serverToUse = scheme;
+			String serverToUse = scheme + "://";
 			if (intServerPort > 80) {
 				serverToUse = serverToUse + serverName + ":" + serverPort + contextPath;
 			} else {
