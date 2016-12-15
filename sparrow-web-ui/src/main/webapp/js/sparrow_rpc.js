@@ -503,16 +503,16 @@ function renderGraph(id_JSON) {
 	        	var prettyUnits = Sparrow.USGS.prettyPrintUnitsForGoogleQueryParam(Sparrow.SESSION.getModelUnits());
 	        	if(Sparrow.SESSION.hasEnabledAdjustments()) {
 	        		document.getElementById('src_total_adj').style.display = 'block';
-	        		document.getElementById('src_bvg').src = 'http://chart.apis.google.com/chart?chco='+ orig_adj_col +'&chtt=Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source (' + prettyUnits + ')&chs='+chart_width+'x'+chart_height+'&cht=bvg&chd=t:' + orig_vals + '|' + adj_vals + '&chl=' + label_url + '&chds=0,' + max_val + '&chxt=y&chxr=0,0,' + max_val;
-	            	document.getElementById('src_total_orig').src = 'http://chart.apis.google.com/chart?chco='+ orig_col +'&chtt=Share of Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source - Original&chs=420x140&cht=p&chd=t:' + orig_url + '&chl=' + orig_label_url;
-	            	document.getElementById('src_total_adj').src = 'http://chart.apis.google.com/chart?chco='+ adj_col +'&chtt=Share of Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source - Adjusted&chs=420x140&cht=p&chd=t:' + adj_url + '&chl=' + adj_label_url;
+	        		document.getElementById('src_bvg').src = 'https://chart.apis.google.com/chart?chco='+ orig_adj_col +'&chtt=Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source (' + prettyUnits + ')&chs='+chart_width+'x'+chart_height+'&cht=bvg&chd=t:' + orig_vals + '|' + adj_vals + '&chl=' + label_url + '&chds=0,' + max_val + '&chxt=y&chxr=0,0,' + max_val;
+	            	document.getElementById('src_total_orig').src = 'https://chart.apis.google.com/chart?chco='+ orig_col +'&chtt=Share of Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source - Original&chs=420x140&cht=p&chd=t:' + orig_url + '&chl=' + orig_label_url;
+	            	document.getElementById('src_total_adj').src = 'https://chart.apis.google.com/chart?chco='+ adj_col +'&chtt=Share of Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source - Adjusted&chs=420x140&cht=p&chd=t:' + adj_url + '&chl=' + adj_label_url;
 	            	document.getElementById('src_graph_legend').innerHTML = legend_html;
 	        	}
 	        	else {
 	        		chart_width = chart_width / 2;
 	        		document.getElementById('src_total_adj').style.display = 'none';
-	        		document.getElementById('src_bvg').src = 'http://chart.apis.google.com/chart?chco='+ orig_col +'&chtt=Total Load by Source (' + prettyUnits + ')&chs='+chart_width+'x130&cht=bvg&chd=t:' + orig_vals + '&chl=' + label_url + '&chds=0,' + max_val + '&chxt=y&chxr=0,0,' + max_val;
-	            	document.getElementById('src_total_orig').src = 'http://chart.apis.google.com/chart?chco='+ orig_col +'&chtt=Share of Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source&chs=420x140&cht=p&chd=t:' + orig_url + '&chl=' + orig_label_url;
+	        		document.getElementById('src_bvg').src = 'https://chart.apis.google.com/chart?chco='+ orig_col +'&chtt=Total Load by Source (' + prettyUnits + ')&chs='+chart_width+'x130&cht=bvg&chd=t:' + orig_vals + '&chl=' + label_url + '&chds=0,' + max_val + '&chxt=y&chxr=0,0,' + max_val;
+	            	document.getElementById('src_total_orig').src = 'https://chart.apis.google.com/chart?chco='+ orig_col +'&chtt=Share of Total ' + Sparrow.SESSION.getModelConstituent() + ' Load by Source&chs=420x140&cht=p&chd=t:' + orig_url + '&chl=' + orig_label_url;
 	            	document.getElementById('src_graph_legend').innerHTML = legend_html;
 	        	}
 	        }
