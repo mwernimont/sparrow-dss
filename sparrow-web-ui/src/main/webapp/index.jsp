@@ -53,6 +53,22 @@
 		<div id="doc-and-model-container" class="area-content">
 
 			<div id="doc" class="columns-2">
+			    <div id="shutDownNotice">
+				<h3>Pending Shut-Down of the SPARROW Decision Support System</h3>
+				<p>
+				    The SPARROW decision support system is scheduled to be shut down 
+				    after July 27, 2017. Please download all files you may be interested 
+				    in prior to the shutdown.
+				</p>
+				<p>
+				    New interactive SPARROW mappers are being developed to replace the 
+				    decision support system (see <a href="http://wim.usgs.gov/sparrowmarb/sparrowmarbmapper.html">existing mappers</a>)
+				    for the Great Lakes and the Mississippi River Basin).
+				</p>
+				<p>
+				    Questions regarding the shut down of the DSS and alternatives can be directed to <a href="mailto:spreston@usgs.gov">spreston@usgs.gov</a>.
+				</p>
+			    </div>
 
 				<div id="reference-links" class="column">
 					<h4>Documentation and Further Reading</h4>
