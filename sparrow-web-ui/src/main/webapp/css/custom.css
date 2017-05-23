@@ -753,3 +753,20 @@ fieldset fieldset .form-note {
 .x-color-palette em span {
     height: 12px; line-height: 1px; width: 12px;
 }
+
+#shutDownNoticeSplash,
+#shutDownNotice{
+     line-height: 1.5em;
+}
+
+#shutDownNotice {
+    padding: 10px;
+}
+
+#shutDownNotice h3 {
+    margin-bottom: 5px;
+}
+
+#shutDownNotice p {
+    margin-bottom: 10px;
+}

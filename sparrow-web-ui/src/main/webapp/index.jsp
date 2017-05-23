@@ -53,7 +53,7 @@
 		<div id="doc-and-model-container" class="area-content">
 
 			<div id="doc" class="columns-2">
-			    <div id="shutDownNotice">
+			    <div id="shutDownNoticeSplash">
 				<h3>Pending Shut-Down of the SPARROW Decision Support System</h3>
 				<p>
 				    The SPARROW decision support system is scheduled to be shut down 
