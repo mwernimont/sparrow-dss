@@ -473,6 +473,7 @@ MapOptionsPanel = Ext.extend(Ext.form.FormPanel, {
 		});
 		
 		var shutdownnotice = new Ext.form.FieldSet({
+			cls: 'shutdownNotice',
 			anchor: fieldsetAnchor,
 			labelAlign: 'top',
 			items: [
