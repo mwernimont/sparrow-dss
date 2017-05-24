@@ -759,20 +759,19 @@ fieldset fieldset .form-note {
 }
 
 #shutDownNoticeSplash,
-#shutDownNotice{
+#ext-comp-1113{
      line-height: 1.5em;
 }
 
-#shutDownNotice {
-    padding: 10px;
-    position: absolute;
-    bottom: -10px;
+#ext-comp-1113{
+    font-size:1.1em;
+    border-color:red;
 }
 
-#shutDownNotice h3 {
+#ext-comp-1113 h3 {
     margin-bottom: 5px;
 }
 
-#shutDownNotice p {
+#ext-comp-1113 p {
     margin-bottom: 10px;
 }

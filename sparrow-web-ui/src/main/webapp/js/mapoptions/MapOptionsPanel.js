@@ -471,6 +471,26 @@ MapOptionsPanel = Ext.extend(Ext.form.FormPanel, {
 			        }
 			        ]
 		});
+		
+		var shutdownnotice = new Ext.form.FieldSet({
+			anchor: fieldsetAnchor,
+			labelAlign: 'top',
+			items: [
+			        {xtype: 'label', html: '<h3>Pending Shut-Down of the SPARROW Decision Support System</h3>'},
+			        {
+				    html: '<p>The SPARROW decision support system is scheduled to be shut down after July 27, 2017. Please download all files you may be interested in prior to the shutdown.</p>',
+				    border: false,
+				},
+				{
+				    html: '<p>New interactive SPARROW mappers are being developed to replace the decision support system (see <a href="http://wim.usgs.gov/sparrowmarb/sparrowmarbmapper.html">existing mappers</a>)for the Great Lakes and the Mississippi River Basin).</p>',
+				    border: false,
+				},
+				{
+				    html: '<p>Questions regarding the shut down of the DSS and alternatives can be directed to <a href="mailto:spreston@usgs.gov">spreston@usgs.gov</a>.</p>',
+				    border: false,
+				}
+			        ]
+		});
 
 		var defaults = {
 				border: true,
@@ -480,7 +500,8 @@ MapOptionsPanel = Ext.extend(Ext.form.FormPanel, {
 				items: [
 				        dataSeriesSection,
 				        modelSourceSection,
-				        mapDisplayOptionsSection
+				        mapDisplayOptionsSection,
+					shutdownnotice
 				        ]
 		};
 
