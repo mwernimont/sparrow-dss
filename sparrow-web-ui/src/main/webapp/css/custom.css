@@ -754,6 +754,10 @@ fieldset fieldset .form-note {
     height: 12px; line-height: 1px; width: 12px;
 }
 
+#map-options-tab form{
+    min-height:200px;
+}
+
 #shutDownNoticeSplash,
 #shutDownNotice{
      line-height: 1.5em;
@@ -761,6 +765,8 @@ fieldset fieldset .form-note {
 
 #shutDownNotice {
     padding: 10px;
+    position: absolute;
+    bottom: -10px;
 }
 
 #shutDownNotice h3 {

@@ -158,7 +158,8 @@
         </div>
       </div>
       <div id="map-options-tab" class="x-hide-display">
-	    <div id="shutDownNotice">
+      </div>
+	<div id="shutDownNotice">
 		<h3>Pending Shut-Down of the SPARROW Decision Support System</h3>
 		<p>
 		    The SPARROW decision support system is scheduled to be shut down 
@@ -174,7 +175,6 @@
 		    Questions regarding the shut down of the DSS and alternatives can be directed to <a href="mailto:spreston@usgs.gov">spreston@usgs.gov</a>.
 		</p>
 	    </div>
-      </div>
     </div>
 
     <div id="map-area">
