@@ -274,3 +274,15 @@ table {	font-size: 100%; }
 td, th { vertical-align: top; }
 th { font-weight: bold; font-size: 100%; }
 
+#shutDownNoticeSplash{
+    background:red;
+    line-height:1.5em;
+    color:#fff;
+    padding:10px;
+    border-radius: 5px;
+}
+
+#shutDownNoticeSplash a{
+    color:#000;
+}
+

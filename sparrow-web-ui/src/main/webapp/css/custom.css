@@ -758,14 +758,15 @@ fieldset fieldset .form-note {
     min-height:200px;
 }
 
-#shutDownNoticeSplash,
 .shutdownNotice{
      line-height: 1.5em;
+     background:red;
+     font-size:1.1em;
+     color:#fff;
 }
 
-.shutdownNotice{
-    font-size:1.1em;
-    border-color:red;
+.shutdownNotice .x-panel-body{
+    background-color: red;
 }
 
 .shutdownNotice h3 {
@@ -774,4 +775,8 @@ fieldset fieldset .form-note {
 
 .shutdownNotice p {
     margin-bottom: 10px;
+}
+
+.shutdownNotice a{
+    color:#000;
 }
